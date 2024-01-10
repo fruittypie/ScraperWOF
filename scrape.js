@@ -1,9 +1,9 @@
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import { executablePath } from "puppeteer";
-import { DynamoDB } from 'aws-sdk';
+import AWS from 'aws-sdk';
 
-const dynamoDB = new DynamoDB.DocumentClient();
+const dynamoDB = new AWS.DynamoDB();
 
 puppeteer.use(StealthPlugin());
 
