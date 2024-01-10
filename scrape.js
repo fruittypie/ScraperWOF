@@ -73,7 +73,6 @@ async function saveColorToDB(colorNumber) {
 (async () =>{
     try {
         const browser = await puppeteer.launch({ executablePath: executablePath(), headless: "new" });
-        await client.connect();
         const page = await browser.newPage();
 
         await page.goto('https://bandit.camp/wheel');
