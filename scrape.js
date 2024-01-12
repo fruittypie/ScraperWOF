@@ -13,16 +13,22 @@ const password = process.env.PASSWORD;
 
 // Function to observe and copy color to the database
 async function observeAndCopyColor(page) {
-   
+    page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
     const lockSelector = 'path[data-v-41856078].fa-primary';
+    console.log('Lock Selector Found:', !!lockElement);
     const containerSelector = 'div.round-history-inner';
+    console.log('Container Selector Found:', !!containerElement);
     const svgSelector = `${containerSelector} svg`;
+    console.log('SVG Selector Found:', !!svgElement);
 
     while(true) {
         try {
+            console.log('Waiting for the selector');
             await page.waitForSelector(lockSelector, { hidden: true, timeout: defaultTimeout }); 
-            
+            page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
+
             const svgElements = await page.$$(svgSelector);
+            console.log('FirstSVG is: ', svgElements[1]);
             const firstSVG = svgElements[1];
 
             if (firstSVG) {
@@ -78,67 +84,9 @@ async function saveColorToDB(colorNumber) {
         await page.goto('https://bandit.camp/wheel');
         console.log("Landed on the website");
 
-        await page.waitForSelector('button[data-v-0c79b5ba]');
-        const loginButton = await page.$('button[data-v-0c79b5ba]');
+        await observeAndCopyColor(page);
+        console.log('Function executed');
 
-        if (loginButton) {
-            await loginButton.click();
-            console.log("Login button clicked");
-
-            // Wait for a Steam login popup
-            const popupTarget = new Promise(resolve => browser.once('targetcreated', resolve));
-
-            const popupTargetValue = await popupTarget;
-            const popupPage = await popupTargetValue.page();
-
-            if (popupPage) {
-                await page.bringToFront();
-                await page.waitForSelector('.link.primary500--text.font-weight-bold');
-                const clickHereLink = await page.$('.link.primary500--text.font-weight-bold');
-            
-                if (clickHereLink) {
-
-                    await page.evaluate(() => {
-                        const clickHereLink = document.querySelector('.link.primary500--text.font-weight-bold');
-                        if (clickHereLink) {
-                          clickHereLink.click();
-                        } else {
-                          console.log("Click here element not found");
-                        }
-                      });
-                    
-                    // Type a username into the email input field
-                    await page.waitForSelector('.newlogindialog_TextField_2KXGK input[type="text"]')
-                    await page.type('.newlogindialog_TextField_2KXGK input[type="text"]', username); 
-                    
-                    // Type password into password input field
-                    await page.waitForSelector('.newlogindialog_TextField_2KXGK input[type="password"]');
-                    await page.type('.newlogindialog_TextField_2KXGK input[type="password"]', password); 
-                    
-                    //Click "Sign in" on Steam login page
-                    await page.click('.newlogindialog_SubmitButton_2QgFE');
-        
-                    await page.waitForNavigation();
-                } else {
-                    console.log("Click here element not found")
-                }
-
-                const signInButton = await page.$('#imageLogin');
-                await signInButton.click();
-
-                await page.waitForNavigation();
-                await page.goto('https://bandit.camp/wheel');
-                console.log('before executing the function');
-
-                await observeAndCopyColor(page);
-                console.log('Function executed');
-
-            } else {
-                console.log ("Click here link not found");
-            }
-        } else {
-            console.log("Popup page not created or login button is not clicked");
-        }
     } catch (error) {
         console.error('Error:', error);
     }
