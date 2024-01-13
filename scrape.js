@@ -8,18 +8,17 @@ const dynamoDB = new AWS.DynamoDB();
 puppeteer.use(StealthPlugin());
 
 const defaultTimeout = 30000;
-const username = process.env.USERNAME;
-const password = process.env.PASSWORD;
+
 
 // Function to observe and copy color to the database
 async function observeAndCopyColor(page) {
     page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
     const lockSelector = 'path[data-v-41856078].fa-primary';
-    console.log('Lock Selector Found:', !!lockElement);
+    console.log('Lock Selector Found:', !!lockSelector);
     const containerSelector = 'div.round-history-inner';
-    console.log('Container Selector Found:', !!containerElement);
+    console.log('Container Selector Found:', !!containerSelector);
     const svgSelector = `${containerSelector} svg`;
-    console.log('SVG Selector Found:', !!svgElement);
+    console.log('SVG Selector Found:', !!svgSelector);
 
     while(true) {
         try {
