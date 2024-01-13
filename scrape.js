@@ -15,7 +15,7 @@ const password = process.env.PASSWORD;
 async function observeAndCopyColor(page) {
     page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
     const lockSelector = 'path[data-v-41856078].fa-primary';
-    console.log('Lock Selector Found:', !!lockElement);
+    console.log('Lock Selector Found:', !!lockSelector);
     const containerSelector = 'div.round-history-inner';
     console.log('Container Selector Found:', !!containerElement);
     const svgSelector = `${containerSelector} svg`;
