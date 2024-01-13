@@ -11,8 +11,21 @@ puppeteer.use(StealthPlugin());
 
 (async () =>{
      try {
-         const browser = await puppeteer.launch({ executablePath: executablePath(), headless: true });
+         const browser = await puppeteer.launch({ executablePath: executablePath(), headless: true, args: ["--no-sandbox"], });
          const page = await browser.newPage();
+
+          await page.setRequestInterception(true);
+          page.on("request", (request) => {
+             if (request.resourceType() === "image" || request.resourceType() === "stylesheet") {
+                 request.abort();
+             } else {
+                 request.continue();
+             }
+         });
+
+        await page.addStyleTag({ content: 'body * { transition: none !important; animation: none !important; }' });
+        await page.setViewport({ width: 500, height: 500 });
+
     
          await page.goto('https://bandit.camp/wheel');
          console.log("Landed on the website");
@@ -24,6 +37,12 @@ puppeteer.use(StealthPlugin());
          const svgSelector = `${containerSelector} svg`;
          console.log('SVG Selector Found:', !!svgSelector);
 
+         const pages = await browser.pages();
+         pages.forEach((pg) => {
+         if (pg !== page) {
+             pg.close();
+         }
+         });
      } catch (error) {
          console.error('Error:', error);
      }
