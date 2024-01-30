@@ -13,10 +13,11 @@ const NumberList = () => {
 
   const loadNumbers = async () => {
     try {
-      const response = await axios.get('/api/numbers');
+      const response = await axios.get('http://localhost:3000/api/numbers');
       const newNumbers = response.data;
-      setNumbers((prevNumbers) => [...prevNumbers, ...newNumbers]);
-
+      const uniqueNew = newNumbers.filter(n => !numbers.includes(n));
+      setNumbers((prevNumbers) => [...prevNumbers, ...uniqueNew]);
+      console.log('New Numbers:', newNumbers);
       if (newNumbers.length < 100) {
         setHasMore(false); // Stop loading when no more numbers
       }
@@ -33,8 +34,8 @@ const NumberList = () => {
       loader={<h6>Loading...</h6>}
     >
       {numbers.map((number) => (
-        <div key={number._id}>
-          <img src={`./pictures/Roll${number.value}.svg`} alt={`Number ${number.value}`} />
+        <div key={`${number.timestamp}-${number._id}`}>
+          <img src={`../pictures/Roll${number.value}.png`} alt={`Number ${number.value}`} />
         </div>
 ))}
     </InfiniteScroll>

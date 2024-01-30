@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 
 const app = express();
+app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/BanditCamp');
 
@@ -13,10 +14,9 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-app.get('/api/numbers', async (req, res) => {
-    
+app.get('/api/numbers', async (req, res) => { 
     try {
-        const numbers = mongoose.connection.collection('wofColor').find().limit(100).toArray();
+        const numbers = await mongoose.connection.collection('wofColor').find().sort({$natural: -1}).limit(100).toArray();
         res.json(numbers);
     } catch (error) {
         console.error('Failed to fetch numbers from the db', error);
