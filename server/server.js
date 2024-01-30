@@ -1,15 +1,22 @@
-import expressApp from "express";
-import axios from "axios";
+import express from "express";
 import mongoose from "mongoose";
+import cors from "cors";
 
 const app = express();
 
-mongoose.connect('mongodb://BanditCamp');
+mongoose.connect('mongodb://localhost:27017/BanditCamp');
+
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
 
 app.get('/api/numbers', async (req, res) => {
     
     try {
-        const numbers = mongoose.connection.collection('wofColor').find().limit(100).toArray;
+        const numbers = mongoose.connection.collection('wofColor').find().limit(100).toArray();
         res.json(numbers);
     } catch (error) {
         console.error('Failed to fetch numbers from the db', error);
@@ -20,5 +27,5 @@ app.get('/api/numbers', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(` Server is listening on port ${PORT}`);
+    console.log(`Server is listening on port ${PORT}`);
 });
