@@ -16,7 +16,7 @@ db.once('open', () => {
 
 app.get('/api/numbers', async (req, res) => { 
     try {
-        const numbers = await mongoose.connection.collection('wofColor').find().sort({$natural: -1}).limit(100).toArray();
+        const numbers = await mongoose.connection.collection('wofColor').find().sort({$natural: -1}).limit(10000).toArray();
         res.json(numbers);
     } catch (error) {
         console.error('Failed to fetch numbers from the db', error);

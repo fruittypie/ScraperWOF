@@ -2,43 +2,57 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import LazyLoad from 'react-lazy-load';
+
+
+const MAX_NUMBERS = 10000;
+const INITIAL_DISPLAY_COUNT = 200;
 
 const NumberList = () => {
   const [numbers, setNumbers] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
 
   useEffect(() => {
-    loadNumbers();
+    const fetchNumbers = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/numbers');
+        setNumbers(response.data);
+      } catch (error) {
+        console.error(error);  
+      }
+    }
+
+    if(!numbers.length) {
+      fetchNumbers();
+    }
   }, []);
 
-  const loadNumbers = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/api/numbers');
-      const newNumbers = response.data;
-      const uniqueNew = newNumbers.filter(n => !numbers.includes(n));
-      setNumbers((prevNumbers) => [...prevNumbers, ...uniqueNew]);
-      console.log('New Numbers:', newNumbers);
-      if (newNumbers.length < 100) {
-        setHasMore(false); // Stop loading when no more numbers
-      }
-    } catch (error) {
-      console.error(error);
-    }
+  const loadMore = () => {
+    setLoading(true);
+    const nextDisplayCount = Math.min(displayCount + INITIAL_DISPLAY_COUNT, MAX_NUMBERS);
+    setDisplayCount(nextDisplayCount);
+    setLoading(false); 
   };
 
   return (
-    <InfiniteScroll
-      dataLength={numbers.length}
-      next={loadNumbers}
-      hasMore={hasMore}
-      loader={<h6>Loading...</h6>}
-    >
-      {numbers.map((number) => (
-        <div key={`${number.timestamp}-${number._id}`}>
-          <img src={`../pictures/Roll${number.value}.png`} alt={`Number ${number.value}`} />
+    <>
+      {numbers.slice(0, displayCount).map((number) => (
+        <LazyLoad key={`${number.timestamp}-${number._id}`} height={150} offset={10}>
+          <div>
+            <img src={`../pictures/Roll${number.value}.png`} alt={`Number ${number.value}`} />
+          </div>
+        </LazyLoad>
+      ))}
+
+      {displayCount < MAX_NUMBERS && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <button onClick={loadMore} disabled={loading}>
+            Load More
+          </button>
         </div>
-))}
-    </InfiniteScroll>
+      )}
+    </>
   );
 };
 
