@@ -1,9 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-
+import path from 'path';
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
+app.use('/pictures', express.static(path.join(__dirname, '../client/src/pictures')));
 
 mongoose.connect('mongodb://localhost:27017/BanditCamp');
 
