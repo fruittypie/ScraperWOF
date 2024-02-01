@@ -2,12 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
+import socketIOClient from 'socket.io-client';
 import './NumberList.css'
 
-
-
 const MAX_NUMBERS = 10000;
-const INITIAL_DISPLAY_COUNT = 200;
+const INITIAL_DISPLAY_COUNT = 500;
 
 const NumberList = () => {
   const [numbers, setNumbers] = useState([]);
@@ -22,12 +21,24 @@ const NumberList = () => {
       } catch (error) {
         console.error(error);  
       }
-    }
+    };
+
+    const socket = socketIOClient('http://localhost:3000');
+
+    // Listen for the 'newNumber' event
+    socket.on('newNumber', (newNumber) => {
+      // Update your UI with the new number
+      setNumbers((prevNumbers) => [newNumber, ...prevNumbers]);
+    });
 
     if(!numbers.length) {
       fetchNumbers();
     }
-  }, []);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [numbers]);
 
   const loadMore = () => {
     setLoading(true);
