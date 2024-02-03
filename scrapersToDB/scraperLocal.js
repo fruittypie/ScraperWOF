@@ -6,7 +6,7 @@ import  { MongoClient }  from "mongodb";
 // MongoDB clean table commands
 // >use BanditCamp - will connect to the DB
 // >db.wofColor.deleteMany({}) - will clean table
-const uri = 'mongodb://localhost:27017/BanditCamp';
+const uri = 'mongodb+srv://fruitypie:712Kennington@clusterwheel.kylegbl.mongodb.net/BanditCamp?retryWrites=true&w=majority';
 const client = new MongoClient(uri);
 const database = client.db();
 const collection = database.collection('wofColor');
@@ -51,8 +51,6 @@ const main = async () => {
                       return match ? match[1] : null;
                     }).filter(number => number !== null); // Filter out null values
                 });
-                console.log('oldArray is: ', previousColors);
-                console.log('newArray is: ', svgColorsArray);
                 
                 if (previousColors.length == 0) {
                     addToMongoDB(svgColorsArray);

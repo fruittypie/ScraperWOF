@@ -6,11 +6,17 @@ import { MongoClient } from 'mongodb';
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server using Express 
-const io = new Server(server);  // Attach socket.io to the HTTP server
 
+const io = new Server(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    }
+  });
+  
 app.use(cors());
 
-const mongoURI = 'mongodb://localhost:27017/BanditCamp';
+const mongoURI = 'mongodb+srv://fruitypie:712Kennington@clusterwheel.kylegbl.mongodb.net/<BanditCamp>?retryWrites=true&w=majority';
 const dbName = 'BanditCamp';
 const collectionName = 'wofColor';
 
@@ -21,6 +27,7 @@ const connectToDB = async () => {
     try {
         client = new MongoClient(mongoURI);
         await client.connect();
+        console.log('Connected to db');
         database = client.db(dbName);
         const wofColorCollection = database.collection(collectionName);
         
@@ -57,10 +64,12 @@ app.get('/api/numbers', async (req, res) => {
     } catch (error) {
         console.error('Failed to fetch numbers from the db', error);
         res.status(500).json({ error:'Internal server error' });
-    } finally {
-        if (client) {
-            client.close();
-        }
+    }
+});
+
+server.on('close', () => {
+    if (client) {
+        client.close();
     }
 });
 
