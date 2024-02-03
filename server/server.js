@@ -3,6 +3,10 @@ import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server using Express 
@@ -16,7 +20,7 @@ const io = new Server(server, {
   
 app.use(cors());
 
-const mongoURI = 'mongodb+srv://fruitypie:712Kennington@clusterwheel.kylegbl.mongodb.net/<BanditCamp>?retryWrites=true&w=majority';
+const mongoURI = process.env.MONGODB_URI;
 const dbName = 'BanditCamp';
 const collectionName = 'wofColor';
 

@@ -1,12 +1,11 @@
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import  { MongoClient }  from "mongodb";
+import dotenv from 'dotenv';
 
+dotenv.config();
 
-// MongoDB clean table commands
-// >use BanditCamp - will connect to the DB
-// >db.wofColor.deleteMany({}) - will clean table
-const uri = 'mongodb+srv://fruitypie:712Kennington@clusterwheel.kylegbl.mongodb.net/BanditCamp?retryWrites=true&w=majority';
+const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 const database = client.db();
 const collection = database.collection('wofColor');
