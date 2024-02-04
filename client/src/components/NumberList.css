@@ -1,3 +1,7 @@
 .imageColor {
     height: 20px;
 }
+
+.selected {
+    opacity: 0.1;
+  }

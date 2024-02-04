@@ -8,7 +8,7 @@ import './NumberList.css'
 const MAX_NUMBERS = 10000;
 const INITIAL_DISPLAY_COUNT = 500;
 
-const NumberList = (props) => {
+const NumberList = ({ selectedNumbers, setLatestNumber }) => {
   const [numbers, setNumbers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
@@ -30,7 +30,7 @@ const NumberList = (props) => {
       // Update your UI with the new number
       setNumbers((prevNumbers) => [newNumber, ...prevNumbers]);
 
-      props.setLatestNumber(newNumber.value);
+      setLatestNumber(newNumber.value);
     });
 
     if(!numbers.length) {
@@ -55,7 +55,10 @@ const NumberList = (props) => {
         {numbers.slice(0, displayCount).map((number) => (
           <LazyLoad key={`${number.timestamp}-${number._id}`} height={50} offset={10}>
             <div style={{ marginRight: '3px', marginLeft: '3px' }}>
-              <img className='imageColor' src={`src/pictures/Roll${number.value}.png`} alt={`Number ${number.value}`} />
+              <img 
+                className={`imageColor ${selectedNumbers.length === 0 || selectedNumbers.includes(number.value)? '' : 'selected'}`}
+                src={`src/pictures/Roll${number.value}.png`} alt={`Number ${number.value}`} 
+              />
             </div>
           </LazyLoad>
         ))}

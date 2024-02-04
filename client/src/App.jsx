@@ -1,11 +1,17 @@
 import './App.css';
 import React, { useState } from 'react';
 import NumberList from './components/NumberList.jsx';
-import NumberButtons from './components/NumberButtons.jsx';
+import CurrentNumber from './components/CurrentNumber.jsx';
+import NumberButtons from './components/NumberButtons.jsx';  // Import NumberButtons
 
 function App() {
   const [latestNumber, setLatestNumber] = useState(null);
+  const [selectedNumbers, setSelectedNumber] = useState([]);  // Add selectedNumber state
 
+  const handleToggle = (numbers) => {
+    setSelectedNumber(numbers);
+  };
+  
   return (
     <div className="App">
       <header>
@@ -16,13 +22,17 @@ function App() {
         </div>
       </header>
       <div>
-        <NumberButtons latestNumber={latestNumber} />
+        <NumberButtons handleToggle={handleToggle} />
       </div>
       <div>
-        <NumberList setLatestNumber={setLatestNumber} />
+        <CurrentNumber latestNumber={latestNumber} />
+      </div>
+      <div>
+        <NumberList setLatestNumber={setLatestNumber} selectedNumbers={selectedNumbers} />
       </div>
     </div>
   );
 }
 
 export default App;
+
