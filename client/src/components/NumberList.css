@@ -2,6 +2,17 @@
     height: 20px;
 }
 
-.selected {
+.clicked {
+    height: 20px;
     opacity: 0.1;
-  }
+}
+.selected {
+    filter: blur(0.3px);
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgb(172, 172, 172);
+}
+
+.imageColor:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgb(172, 172, 172);
+}

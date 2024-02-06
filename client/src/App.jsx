@@ -6,10 +6,10 @@ import NumberButtons from './components/NumberButtons.jsx';  // Import NumberBut
 
 function App() {
   const [latestNumber, setLatestNumber] = useState(null);
-  const [selectedNumbers, setSelectedNumber] = useState([]);  // Add selectedNumber state
+  const [selectedNumbers, setSelectedNumbers] = useState([]);  // Add selectedNumber state
 
   const handleToggle = (numbers) => {
-    setSelectedNumber(numbers);
+    setSelectedNumbers(numbers);
   };
   
   return (
@@ -28,7 +28,7 @@ function App() {
         <CurrentNumber latestNumber={latestNumber} />
       </div>
       <div>
-        <NumberList setLatestNumber={setLatestNumber} selectedNumbers={selectedNumbers} />
+        <NumberList setLatestNumber={setLatestNumber} selectedNumbers={selectedNumbers} setSelectedNumbers={setSelectedNumbers} />
       </div>
     </div>
   );
