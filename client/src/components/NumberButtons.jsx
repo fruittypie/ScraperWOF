@@ -33,7 +33,7 @@ const NumberButtons = ({ handleToggle }) => {
         >
           <img
             className='imageButton'
-            style={{ height: '80px', marginBottom: '15px' }}
+            style={{ height: '30px', marginBottom: '15px' }}
             src={`src/pictures/${number}button.jpg`}
             alt={`Number ${number}`}
           />

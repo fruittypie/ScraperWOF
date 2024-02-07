@@ -2,37 +2,32 @@ import './App.css';
 import React, { useState } from 'react';
 import NumberList from './components/NumberList.jsx';
 import CurrentNumber from './components/CurrentNumber.jsx';
-import NumberButtons from './components/NumberButtons.jsx';  // Import NumberButtons
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [latestNumber, setLatestNumber] = useState(null);
   const [selectedNumbers, setSelectedNumbers] = useState([]);  // Add selectedNumber state
-
-  const handleToggle = (numbers) => {
-    setSelectedNumbers(numbers);
-  };
   
   return (
-    <div className="App">
-      <header>
-        <div>
-          <h1>
-            Number History
-          </h1>
+  <div className="row">
+    <div className="col-md-8">
+      <div className="row">
+        <div className="col-md-6" style={{ height: '25vh', backgroundColor: 'lightgreen' }}>
         </div>
-      </header>
-      <div>
-        <NumberButtons handleToggle={handleToggle} />
+        <div className="col-md-6" style={{ height: '25vh', backgroundColor: 'lightblue' }} >
+          <CurrentNumber latestNumber={latestNumber} />
+        </div>
       </div>
-      <div>
-        <CurrentNumber latestNumber={latestNumber} />
-      </div>
-      <div>
-        <NumberList setLatestNumber={setLatestNumber} selectedNumbers={selectedNumbers} setSelectedNumbers={setSelectedNumbers} />
+      <div className="row">   
+        <div className="col-md-12" style={{ backgroundColor: 'lightyellow' }}>
+          <NumberList setLatestNumber={setLatestNumber} selectedNumbers={selectedNumbers} setSelectedNumbers={setSelectedNumbers} />
+        </div>
       </div>
     </div>
+    <div className="col-md-4" style={{ height: '100vh', backgroundColor: 'lightpink' }}>
+    </div>
+  </div>
   );
 }
 
 export default App;
-
