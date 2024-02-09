@@ -8,8 +8,8 @@ dotenv.config();
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 const database = client.db();
-const collection = database.collection('wofColor');
-const garbageCollection = database.collection("wofColorGarbage");
+const collection = database.collection('wofColor1');
+const garbageCollection = database.collection("wofColorGarbage1");
 
 puppeteer.use(StealthPlugin());
 
@@ -36,7 +36,8 @@ const main = async () => {
 
         await page.waitForSelector(containerSelector);
         
-        let previousColors = [];
+        const lastDocuments = await collection.find().sort({ timestamp: -1 }).limit(30).toArray();
+        let previousColors = lastDocuments.map(doc => doc.value);
   
         setInterval(async () => {
             try {

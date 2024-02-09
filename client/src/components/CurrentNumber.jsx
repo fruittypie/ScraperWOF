@@ -1,4 +1,3 @@
-
 const CurrentNumber = ({latestNumber}) => {
     return (
         <div>

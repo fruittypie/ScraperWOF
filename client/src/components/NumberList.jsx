@@ -13,7 +13,6 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
   const [loading, setLoading] = useState(false);
   const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
   const [startIndex, setStartIndex] = useState(null);
-  //const [endIndex, setEndIndex] = useState(null);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
@@ -82,12 +81,10 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
   const handleImageMouseUp = (e, index) => {
     if (e.target.tagName !== 'IMG') {
       setStartIndex(null);
-      //setEndIndex(null);
       setIsMouseDown(false);
       setSelectedValues([]); // Clear selected values when mouse is released outside the image
     } else {
       // Mouse released on the image
-      //setEndIndex(index);
       setIsMouseDown(false);
 
       // Get an array of values for selected indexes

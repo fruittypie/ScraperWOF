@@ -13,6 +13,9 @@ function App() {
     <div className="col-md-8">
       <div className="row">
         <div className="col-md-6" style={{ height: '25vh', backgroundColor: 'lightgreen' }}>
+        <div class="row justify-content-center">         
+          One of two columns         
+        </div>
         </div>
         <div className="col-md-6" style={{ height: '25vh', backgroundColor: 'lightblue' }} >
           <CurrentNumber latestNumber={latestNumber} />
