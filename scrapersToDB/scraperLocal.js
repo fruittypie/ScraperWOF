@@ -8,8 +8,8 @@ dotenv.config();
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri);
 const database = client.db();
-const collection = database.collection('wofColor1');
-const garbageCollection = database.collection("wofColorGarbage1");
+const collection = database.collection('wofColorNew'); 
+//const garbageCollection = database.collection("wofColorGarbage1");
 
 puppeteer.use(StealthPlugin());
 
@@ -59,7 +59,6 @@ const main = async () => {
                     const result = FindNewNumbers(previousColors, svgColorsArray);
                     if (result.length > 0) {
                         addToMongoDB(result);
-                        addGarbageNumsToDB(svgColorsArray);
                     } else {
                         console.log('No new colors detected');
                     }
@@ -92,10 +91,7 @@ async function addToMongoDB(array) {
     };
 };
 
-async function addGarbageNumsToDB(array) {
-    const ArrayAsString = JSON.stringify(array);
-    await garbageCollection.insertOne({ value: ArrayAsString, timestamp: new Date() });
-};
+
 
 function FindNewNumbers(oldArray, newArray) {
     const newArrayCopy = [...newArray];
