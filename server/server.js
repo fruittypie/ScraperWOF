@@ -4,7 +4,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { MongoClient } from 'mongodb';
 import 'dotenv/config';
-
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server using Express 
@@ -19,8 +19,8 @@ const io = new Server(server, {
 app.use(cors());
 
 const mongoURI = process.env.MONGODB_URI;
-const dbName = 'BanditCamp';
-const collectionName = 'wofColor';
+const dbName = process.env.DB_NAME;
+const collectionName = process.env.DB_COLLECTION_NAME;
 
 let database
 let client;
