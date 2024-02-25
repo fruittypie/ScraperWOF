@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
 import socketIOClient from 'socket.io-client';
-import './NumberList.css'
+import './NumberList.css';
+import 'dotenv/config';
+dotenv.config();
 
 const MAX_NUMBERS = 10000;
 const INITIAL_DISPLAY_COUNT = 500;
@@ -21,14 +23,14 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
   useEffect(() => {
     const fetchNumbers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/numbers');
+        const response = await axios.get('/api/numbers');
         setNumbers(response.data);
       } catch (error) {
         console.error(error);  
       }
     };
 
-    const socket = socketIOClient('http://localhost:3000');
+    const socket = socketIOClient(PUBLIC_IP);
 
     // Listen for the 'newNumber' event
     socket.on('newNumber', (newNumber) => {
