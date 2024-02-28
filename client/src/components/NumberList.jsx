@@ -29,7 +29,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
       }
     };
 
-    const socket = socketIOClient('http://lucky.rinaway:3000');
+    const socket = socketIOClient('http://lucky.rinaway:3000/socket.io');
 
     // Listen for the 'newNumber' event
     socket.on('newNumber', (newNumber) => {
