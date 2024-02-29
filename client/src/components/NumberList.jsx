@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
-import socketIOClient from 'socket.io-client';
+import { io } from 'socket.io-client';
 import './NumberList.css';
 
 
@@ -29,7 +29,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
       }
     };
 
-    const socket = socketIOClient('http://lucky.rinaway:3000/socket.io');
+    const socket = io();
 
     // Listen for the 'newNumber' event
     socket.on('newNumber', (newNumber) => {
