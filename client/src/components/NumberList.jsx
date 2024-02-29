@@ -126,7 +126,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
                     ${selectedNumbers.length === 0 || selectedNumbers.includes(number.value) ? 'imageColor' : 'imageColor clicked'}
                     ${isMouseDown  && selectedIndexes.includes(index) ? 'imageColor selected' : 'imageColor'} 
                   `}
-                    src={`src/pictures/Roll${number.value}.png`}
+                    src={`https://luckyrinawaybucket.s3.amazonaws.com/colors/Roll${number.value}.png`}
                     alt={`Number ${number.value}`}
                     onClick={() => handleImageClick(number.value, index)}
                     onMouseMove={() => {

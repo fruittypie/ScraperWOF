@@ -3,7 +3,7 @@ const CurrentNumber = ({latestNumber}) => {
         <div>
           <h2>Latest Number</h2>
           {latestNumber && (
-            <img className='imageColor' style={{height: '100px', marginBottom: '15px' }} src={`src/pictures/${latestNumber}button.jpg`} alt={`Number ${latestNumber}`} />
+            <img className='imageColor' style={{height: '100px', marginBottom: '15px' }} src={`https://luckyrinawaybucket.s3.amazonaws.com/numbers/${number.value}button.jpg`} />
           )}
         </div>
       );
