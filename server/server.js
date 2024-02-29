@@ -4,7 +4,6 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { MongoClient } from 'mongodb';
 import 'dotenv/config';
-dotenv.config();
 
 const app = express();
 const server = http.createServer(app); // Create HTTP server using Express 
