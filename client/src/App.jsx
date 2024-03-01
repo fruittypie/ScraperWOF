@@ -13,22 +13,22 @@ function App() {
   <div className="row">
     <div className="col-md-8">
       <div className="row">
-        <div className="col-md-6" style={{ height: '25vh', backgroundColor: 'lightgreen' }}>
+        <div className="col-md-6" style={{ height: '25vh', backgroundColor: '#F5F5DC' }}>
         <div className="row justify-content-center">         
         <NumberProbabilityCalculator />   
         </div>
         </div>
-        <div className="col-md-6" style={{ height: '25vh', backgroundColor: 'lightblue' }} >
+        <div className="col-md-6" style={{ height: '25vh', backgroundColor: '#343434' }} >
           <CurrentNumber latestNumber={latestNumber} />
         </div>
       </div>
       <div className="row">   
-        <div className="col-md-12" style={{ backgroundColor: 'lightyellow' }}>
+        <div className="col-md-12" style={{ backgroundColor: '#343434' }}>
           <NumberList setLatestNumber={setLatestNumber} selectedNumbers={selectedNumbers} setSelectedNumbers={setSelectedNumbers} />
         </div>
       </div>
     </div>
-    <div className="col-md-4" style={{ height: '100vh', backgroundColor: 'lightpink' }}>
+    <div className="col-md-4" style={{ height: '100vh', backgroundColor: '#343434' }}>
     </div>
   </div>
   );

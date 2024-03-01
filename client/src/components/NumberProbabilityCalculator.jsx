@@ -1,95 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import RollPictures from './RollPictures';
 
 
 const NumberProbabilityCalculator = () => {
-    const [drawCount, setDrawCount] = useState(0);
-    const [drawStats, setDrawStats] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [numbers, setNumbers] = useState([]);
+    const [count, setCount] = useState(0);
 
-    const handleInputChange = (event) => {
-        setDrawCount(event.target.value);
-    };
-
-    const handleSubmit = (event) => {
-        //event.preventDefault();
-       
-        if (drawCount !== 0) {
-          fetchDrawValues();
-        }
-    };
-
-    const fetchDrawValues = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`/api/draws?count=${drawCount}`);
-
-            if (!Array.isArray(draws)) {
-                throw new Error('Draw values data is not in the expected format');
-            }
-
-            calculateDrawStats(response.data)
-
-        } catch (error) {
-            console.error('Error fetching draw values:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const calculateDrawStats = (draws) => {
-        const nums = {
-            '1' : 0,
-            '3' : 0,
-            '5' : 0,
-            '10' : 0,
-            '20' : 0,
+    useEffect(() => {
+        const fetchNumbers = async () => {
+          try {
+            const response = await axios.get(`http://localhost:3000/api/draws?count=${count}`);
+            setNumbers(response.data);
+          } catch (error) {
+            console.error(error);  
+          }
         };
 
-        draws.forEach((draw) => {
-            nums[draw] += 1;
-        });
-
-        const totalRangeCount = draws.length;
-
-        const numberFrequencies = Object.fromEntries(
-            Object.entries(nums).map(([key,value]) => [
-                key,
-                ((value / totalRangeCount) * 100).toFixed(2),
-            ])
-        );
-
-        setDrawStats(numberFrequencies);
+        fetchNumbers();
+    }, [count]);
+ 
+    const handleInputChange = (event) => {
+        setCount(event.target.value);
     };
 
-
-    
     return (
         <div className="col-md-8 game-stats-container">
             <h2>Statistics</h2>
-            <form onSubmit={handleSubmit} >
+            <form >
                 <input 
                     type="number"
-                    value={drawCount}
+                    value={count}
                     onChange={handleInputChange}
-                />
+                /> 
+                <button type="submit">Calculate</button>
             </form>
-            <button type="submit">Calculate</button>
-            {loading ? (
-                <p>Wait...</p>
-            ) : (
-                <div>
-                    {Object.entries(drawStats).map(([value, percentage]) => (
-                        <div key={value} className="number-item">
-                            <img
-                                src={`https://luckyrinawaybucket.s3.amazonaws.com/colors/Roll${value}.png`}
-                                alt={`Number ${value}`}
-                            />
-                            <p>{percentage}%</p>
-                        </div>
-                    ))}
-                </div>
-            )}
+            <div>
+                <RollPictures />
+                {numbers.map((number) => (
+                    number.value
+                ))}
+
+            </div>
+            
         </div>
     );
 };

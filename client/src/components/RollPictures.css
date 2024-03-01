@@ -1,0 +1,13 @@
+.image-block {
+    display: flex;
+    justify-content: space-between; 
+}
+
+.image-wrapper {
+    margin-right: 5px; 
+}
+
+.image-wrapper img {
+    width: 25px; 
+    height: auto;
+}
