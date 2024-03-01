@@ -61,6 +61,10 @@ app.get('/api/draws', async (req, res) => {
     try {
         const {count} = req.query;
         const countNum = parseInt(count);
+        if (isNaN(countNum) || countNum <= 0) {
+            return res.status(400).json({ error: 'Invalid input: the number must be a positive integer' });
+        }
+    
         const draws = await database.collection(collectionName)
             .find()
             .sort({timestamp: -1})
