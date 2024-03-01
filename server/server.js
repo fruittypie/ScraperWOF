@@ -68,6 +68,30 @@ app.get('/api/numbers', async (req, res) => {
     }
 });
 
+app.get('/api/getDraws', async (req, res) => {
+    try {
+        const { drawCount } = req.query;
+        const drawCountInt = parseInt(drawCount);
+        if (isNaN(drawCountInt) || drawCountInt <= 0) {
+            return res.status(400).json({ error: 'Invalid input: the number must be a positive integer' });
+        }
+
+        // Limit the draw count to 50,000
+        const limitedDrawCount = Math.min(drawCountInt, 50000);
+
+        const draws = await database.collection(collectionName)
+            .find({}, { projection: { value: 1 } })
+            .sort({$natural: -1})
+            .limit(limitedDrawCount)
+            .toArray();
+
+        res.json(draws);
+    } catch (error) {
+        console.error('Error fetching draws:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 server.on('close', () => {
     if (client) {
         client.close();
