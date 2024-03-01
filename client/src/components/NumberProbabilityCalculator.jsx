@@ -12,7 +12,7 @@ const NumberProbabilityCalculator = () => {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault();
+        //event.preventDefault();
        
         if (drawCount !== 0) {
           fetchDrawValues();
@@ -23,7 +23,13 @@ const NumberProbabilityCalculator = () => {
         setLoading(true);
         try {
             const response = await axios.get(`/api/draws?count=${drawCount}`);
+
+            if (!Array.isArray(draws)) {
+                throw new Error('Draw values data is not in the expected format');
+            }
+
             calculateDrawStats(response.data)
+
         } catch (error) {
             console.error('Error fetching draw values:', error);
         } finally {
