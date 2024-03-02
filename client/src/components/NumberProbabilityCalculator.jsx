@@ -75,7 +75,6 @@ const NumberProbabilityCalculator = () => {
                     value={count}
                     onChange={handleInputChange}
                 /> 
-                <button type="submit">Calculate</button>
             </form>
             <div>
                 <RollPictures />
