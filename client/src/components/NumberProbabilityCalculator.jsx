@@ -9,7 +9,12 @@ const NumberProbabilityCalculator = () => {
     const [valuePercentages, setValuePercentages] = useState({});
 
     useEffect(() => {
+        
         const fetchNumbers = async () => {
+            if(count <= 0) {
+                setNumbers([]);
+                return; 
+            }
           try {
             const response = await axios.get(`http://localhost:3000/api/draws?count=${count}`);
             setNumbers(response.data);
@@ -19,6 +24,7 @@ const NumberProbabilityCalculator = () => {
         };
 
         fetchNumbers();
+
     }, [count]);
 
     useEffect(() => {
@@ -31,6 +37,7 @@ const NumberProbabilityCalculator = () => {
     };
 
     const countValues = (numbers, totalCount) => {
+        totalCount = Math.max(1, totalCount);
         const valueCounts = {
             '1' : 0,
             '3' : 0,
@@ -46,8 +53,10 @@ const NumberProbabilityCalculator = () => {
         });
 
         const valuePercentages = {};
+
         for (const [value, count] of Object.entries(valueCounts)) {
-            valuePercentages[value] = (count / totalCount) * 100;
+            const percentage = (count / totalCount) * 100;
+            valuePercentages[value] = Number.isNaN(percentage) ? 0 : percentage;
             console.log('count is ', count );
             console.log('totalCount is ', totalCount );
             console.log('valuePercentages is ', valuePercentages );
@@ -72,11 +81,8 @@ const NumberProbabilityCalculator = () => {
                 <div className="percentages-container">
                     {Object.entries(valuePercentages).map(([value, percentage]) => (
                         <div key={value} className="percentage-item">
-                        <div className="percentage-bar">
-                            <div className="fill" style={{ width: `${percentage}%` }}></div>
-                        </div>
-            <div className="percentage">{percentage.toFixed(2)}%</div>
-        </div>
+                        {percentage.toFixed(2)}%
+                </div>
     ))}
 </div>
 
