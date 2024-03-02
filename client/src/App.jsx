@@ -2,6 +2,7 @@ import './App.css';
 import React, { useState } from 'react';
 import NumberList from './components/NumberList.jsx';
 import CurrentNumber from './components/CurrentNumber.jsx';
+import GapAnalyzer from './components/GapAnalyzer.jsx';
 import NumberProbabilityCalculator from './components/NumberProbabilityCalculator.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,7 +16,7 @@ function App() {
       <div className="row">
         <div className="col-md-6" style={{ height: '25vh', backgroundColor: '#F5F5DC' }}>
         <div className="row justify-content-center">         
-        <NumberProbabilityCalculator />   
+          <NumberProbabilityCalculator />   
         </div>
         </div>
         <div className="col-md-6" style={{ height: '25vh', backgroundColor: '#343434' }} >
@@ -28,7 +29,8 @@ function App() {
         </div>
       </div>
     </div>
-    <div className="col-md-4" style={{ height: '100vh', backgroundColor: '#343434' }}>
+    <div className="col-md-4" style={{ backgroundColor: '#F5F5DC' }}>
+      <GapAnalyzer />  
     </div>
   </div>
   );
