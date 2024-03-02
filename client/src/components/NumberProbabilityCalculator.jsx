@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import RollPictures from './RollPictures';
+import '../styles/NumberProbabilityCalculator.css'
 
 
 const NumberProbabilityCalculator = () => {
