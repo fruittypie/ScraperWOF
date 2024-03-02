@@ -81,13 +81,11 @@ const NumberProbabilityCalculator = () => {
                 <div className="percentages-container">
                     {Object.entries(valuePercentages).map(([value, percentage]) => (
                         <div key={value} className="percentage-item">
-                        {percentage.toFixed(2)}%
+                            {percentage.toFixed(2)}%
+                        </div>
+                    ))}
                 </div>
-    ))}
-</div>
-
-            </div>
-            
+            </div> 
         </div>
     );
 };
