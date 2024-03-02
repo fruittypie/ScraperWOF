@@ -1,4 +1,4 @@
-import './RollPictures.css'
+import '../styles/RollPictures.css'
 
 const RollPictures = () => {
 

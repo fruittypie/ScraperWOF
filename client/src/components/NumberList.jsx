@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
 import socketIOClient from 'socket.io-client';
-import './NumberList.css'
+import '../styles/NumberList.css'
 
 const MAX_NUMBERS = 10000;
 const INITIAL_DISPLAY_COUNT = 500;
