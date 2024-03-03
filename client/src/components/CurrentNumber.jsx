@@ -18,12 +18,7 @@ const CurrentNumber = () => {
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       {latestNumber && (
-        <img
-          className="imageColor"
-          style={{ height: '100px', marginBottom: '15px' }}
-          src={`src/pictures/${latestNumber}button.jpg`}
-          alt={`Number ${latestNumber}`}
-        />
+        <img className='imageColor' style={{height: '100px', marginBottom: '15px' }} src={`https://luckyrinawaybucket.s3.amazonaws.com/numbers/${latestNumber}button.jpg`} />
       )}
     </div>
   );

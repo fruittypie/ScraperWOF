@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLatestNumber } from '../../state/number/numberSlice';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
-import socketIOClient from 'socket.io-client';
+import { io } from 'socket.io-client';
 import '../styles/NumberList.css'
 
 const MAX_NUMBERS = 10000;
@@ -35,7 +35,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
       }
     };
 
-    const socket = socketIOClient(`${hostUrl}`);
+    const socket = io(`${hostUrl}`);
 
     // Listen for the 'newNumber' event
     socket.on('newNumber', (newNumber) => {
@@ -131,7 +131,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
                     ${selectedNumbers.length === 0 || selectedNumbers.includes(number.value) ? 'imageColor' : 'imageColor clicked'}
                     ${isMouseDown  && selectedIndexes.includes(index) ? 'imageColor selected' : 'imageColor'} 
                   `}
-                    src={`src/pictures/Roll${number.value}.png`}
+                    src={`https://luckyrinawaybucket.s3.amazonaws.com/colors/Roll${number.value}.png`}
                     alt={`Number ${number.value}`}
                     onClick={() => handleImageClick(number.value, index)}
                     onMouseMove={() => {
