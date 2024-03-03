@@ -26,8 +26,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
+    "start": "NODE_ENV=development vite",
+    "build": "NODE_ENV=production vite build",
     "test": "vite test",
     "serve": "vite preview"
   },
