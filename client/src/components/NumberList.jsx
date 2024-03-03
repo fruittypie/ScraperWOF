@@ -1,7 +1,7 @@
 // src/NumberList.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLatestNumber } from '../actions';
+import { setLatestNumber } from '../../state/number/numberSlice';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
 import socketIOClient from 'socket.io-client';
@@ -12,7 +12,6 @@ const INITIAL_DISPLAY_COUNT = 500;
 
 const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   const dispatch = useDispatch();
-  const latestNumber = useSelector(state => state.number.latestNumber);
 
   const [numbers, setNumbers] = useState([]);
   const [loading, setLoading] = useState(false);

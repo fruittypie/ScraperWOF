@@ -1,4 +1,7 @@
-const CurrentNumber = ({latestNumber}) => {
+import { useSelector } from 'react-redux';
+
+const CurrentNumber = () => {
+  const latestNumber = useSelector((state) => state.number.latestNumber);
     return (
         <div>
           <h2>Latest Number</h2>
