@@ -24,6 +24,8 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   const [startIndex, setStartIndex] = useState(null);
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  
+  let initialIndex = -1;
 
   useEffect(() => {
     const fetchNumbers = async () => {
