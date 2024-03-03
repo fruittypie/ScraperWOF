@@ -1,5 +1,7 @@
 // src/NumberList.jsx
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLatestNumber } from '../../state/number/numberSlice';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
 import { io } from 'socket.io-client';
@@ -9,7 +11,13 @@ import './NumberList.css';
 const MAX_NUMBERS = 10000;
 const INITIAL_DISPLAY_COUNT = 500;
 
-const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) => {
+const apiUrl = process.env.API_URL;
+const hostUrl = process.env.HOST_URL;
+
+
+const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
+  const dispatch = useDispatch();
+
   const [numbers, setNumbers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
@@ -17,26 +25,24 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  let initialIndex = -1;
-
   useEffect(() => {
     const fetchNumbers = async () => {
       try {
-        const response = await axios.get('/api/numbers');
+        const response = await axios.get(`${apiUrl}/numbers`);
         setNumbers(response.data);
+
       } catch (error) {
         console.error(error);  
       }
     };
 
-    const socket = io();
+    const socket = io(`${hostUrl}`);
 
     // Listen for the 'newNumber' event
     socket.on('newNumber', (newNumber) => {
-      // Update your UI with the new number
       setNumbers((prevNumbers) => [newNumber, ...prevNumbers]);
 
-      setLatestNumber(newNumber.value);
+      dispatch(setLatestNumber(newNumber.value));
     });
 
     if(!numbers.length) {
@@ -46,7 +52,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers, setLatestNumber }) =>
     return () => {
       socket.disconnect();
     };
-  }, [numbers]);
+  }, [dispatch, numbers]);
 
   const loadMore = () => {
     setLoading(true);

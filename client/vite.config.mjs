@@ -1,24 +1,32 @@
 // vite.config.js
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import svgrPlugin from 'vite-plugin-svgr';
+import { defineConfig, loadEnv } from 'vite';
 
-export default defineConfig({
-  base: '/',
-  plugins: [
-    react(),
-    svgrPlugin({
-      svgrOptions: {
-        icon: true,
+export default defineConfig(({ command, mode }) => {
+    
+  const env = loadEnv(mode, process.cwd(), '');
+
+    return {
+      base: '/',
+      plugins: [
+        react(),
+        svgrPlugin({
+          svgrOptions: {
+            icon: true,
+          },
+        }),
+      ],
+      build: {
+        esbuildOptions: {
+          loader: {
+            '.js': 'jsx',
+          },
+        },
       },
-    }),
-  ],
-  build: {
-    // Add esbuildOptions to handle JSX in react-drag-select library
-    esbuildOptions: {
-      loader: {
-        '.js': 'jsx',
-      },
-    },
-  },
+        define: {
+            'process.env.API_URL': JSON.stringify(env.API_URL),
+            'process.env.HOST_URL': JSON.stringify(env.HOST_URL),
+        },
+    };
 });

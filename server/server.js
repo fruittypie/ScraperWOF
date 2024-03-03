@@ -58,9 +58,34 @@ io.on('connection', (socket) => {
   });
 });
 
+app.get('/api/draws', async (req, res) => {
+    try {
+        const {count} = req.query;
+        const countNum = parseInt(count);
+        if (isNaN(countNum) || countNum <= 0) {
+            return res.status(400).json({ error: 'Invalid input: the number must be a positive integer' });
+        }
+    
+        const draws = await database.collection(collectionName)
+            .find()
+            .sort({timestamp: -1})
+            .limit(countNum)
+            .toArray();
+        
+        res.json(draws);
+    } catch (error) {
+        console.error('Error fetching draws:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 app.get('/api/numbers', async (req, res) => { 
     try {
-        const numbers = await database.collection(collectionName).find().sort({$natural: -1}).limit(10000).toArray();
+        const numbers = await database.collection(collectionName)
+        .find()
+        .sort({timestamp: -1})
+        .limit(10000)
+        .toArray();
 
         res.json(numbers);
     } catch (error) {
@@ -68,6 +93,23 @@ app.get('/api/numbers', async (req, res) => {
         res.status(500).json({ error:'Internal server error' });
     }
 });
+
+app.get('/api/number', async (req, res) => { 
+    try {
+        const number = await database.collection(collectionName)
+        .find()
+        .sort({timestamp: -1})
+        .limit(1)
+        .next()
+        //const count = await database.collection(collectionName).countDocuments();
+        res.json(number);
+    } catch (error) {
+        console.error('Failed to fetch numbers from the db', error);
+        res.status(500).json({ error:'Internal server error' });
+    }
+});
+
+
 
 server.on('close', () => {
     if (client) {
