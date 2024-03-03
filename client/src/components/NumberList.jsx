@@ -5,7 +5,7 @@ import { setLatestNumber } from '../../state/number/numberSlice';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
 import { io } from 'socket.io-client';
-import './NumberList.css';
+import '../styles/NumberList.css';
 
 
 const MAX_NUMBERS = 10000;
