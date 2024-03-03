@@ -26,10 +26,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "NODE_ENV=development vite",
-    "build": "NODE_ENV=production vite build",
-    "test": "vite test",
-    "serve": "vite preview"
+    "start": "vite", 
+    "build": "vite build"
+ 
   },
   "eslintConfig": {
     "extends": [
@@ -48,5 +47,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "vite": {
+    "build": {
+      "outDir": "dist" 
+    }
   }
 }

@@ -10,6 +10,10 @@ import '../styles/NumberList.css'
 const MAX_NUMBERS = 10000;
 const INITIAL_DISPLAY_COUNT = 500;
 
+const apiUrl = process.env.API_URL;
+const hostUrl = process.env.HOST_URL;
+
+
 const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   const dispatch = useDispatch();
 
@@ -20,19 +24,18 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  let initialIndex = -1;
-
   useEffect(() => {
     const fetchNumbers = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/numbers');
+        const response = await axios.get(`${apiUrl}/numbers`);
         setNumbers(response.data);
+
       } catch (error) {
         console.error(error);  
       }
     };
 
-    const socket = socketIOClient('http://localhost:3000');
+    const socket = socketIOClient(`${hostUrl}`);
 
     // Listen for the 'newNumber' event
     socket.on('newNumber', (newNumber) => {

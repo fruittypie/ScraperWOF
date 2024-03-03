@@ -3,6 +3,7 @@ import axios from 'axios';
 import RollPictures from './RollPictures';
 import '../styles/NumberProbabilityCalculator.css'
 
+const apiUrl = process.env.API_URL;
 
 const NumberProbabilityCalculator = () => {
     const [numbers, setNumbers] = useState([]);
@@ -17,7 +18,7 @@ const NumberProbabilityCalculator = () => {
                 return; 
             }
           try {
-            const response = await axios.get(`http://localhost:3000/api/draws?count=${count}`);
+            const response = await axios.get(`${apiUrl}/draws?count=${count}`);
             setNumbers(response.data);
           } catch (error) {
             console.error(error);  
@@ -58,9 +59,6 @@ const NumberProbabilityCalculator = () => {
         for (const [value, count] of Object.entries(valueCounts)) {
             const percentage = (count / totalCount) * 100;
             valuePercentages[value] = Number.isNaN(percentage) ? 0 : percentage;
-            console.log('count is ', count );
-            console.log('totalCount is ', totalCount );
-            console.log('valuePercentages is ', valuePercentages );
         }
 
         return valuePercentages;

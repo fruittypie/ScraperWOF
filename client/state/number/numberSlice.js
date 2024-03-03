@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const apiUrl = process.env.API_URL;
+
 const initialState = {
   latestNumber: null,
   loading: false,
@@ -11,9 +13,9 @@ export const fetchLatestNumber = createAsyncThunk(
   'number/fetchLatestNumber',
   async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/number');
-      const number = response.data[0];
-      const numberInt= parseInt(number.value);
+      const response = await axios.get(`${apiUrl}/number`);
+      const number = response.data.value;
+      const numberInt= parseInt(number);
       return numberInt;
     } catch (error) {
       throw error;

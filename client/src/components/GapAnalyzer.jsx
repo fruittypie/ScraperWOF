@@ -1,5 +1,7 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
+const apiUrl = process.env.API_URL;
 
 async function findGapOccurrences(arr, num) {
     let currentGap = 0;
@@ -26,6 +28,7 @@ async function findGapOccurrences(arr, num) {
 const GapAnalyzer = () => {
     const [count, setCount] = useState(0);
     const [gapOccurrences, setGapOccurrences] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const targetNumbers = ['1', '3', '5', '10', '20'];
 
@@ -35,12 +38,14 @@ const GapAnalyzer = () => {
 
     useEffect(() => {
         async function fetchDataFromBackend() {
+            setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3000/api/draws?count=${count}`);
+                const response = await axios.get(`${apiUrl}/draws?count=${count}`);
                 return response.data;
             } catch (error) {
                 throw new Error('Error fetching data from backend:', error);
             }
+            
         }
 
         async function fetchDataAndProcess() {
@@ -54,14 +59,19 @@ const GapAnalyzer = () => {
             }
 
             setGapOccurrences(targetGapOccurrences);
+            setLoading(false);
         }
 
         fetchDataAndProcess();
     }, [count]); 
 
+    useEffect(() => {
+        setCount(70000);
+    }, []);
+
     return (
         <div>
-            <h2>Gap of non-occurrences</h2>
+            <h2>Gaps</h2>
             <form>
                 <input 
                     type="number"
@@ -69,6 +79,7 @@ const GapAnalyzer = () => {
                     onChange={handleInputChange}
                 /> 
             </form>
+            {loading && <p>Loading...</p>} 
             <div>
                 {/* Display the gap occurrences */}
                 {Object.entries(gapOccurrences).map(([targetNumber, occurrences]) => (
