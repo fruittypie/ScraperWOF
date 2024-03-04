@@ -1,4 +1,9 @@
+.game-stats-container {
+    color: #C8CCCE;
+}
+
 .percentages-container {
     display: flex;
     justify-content: space-between; 
+    
 }

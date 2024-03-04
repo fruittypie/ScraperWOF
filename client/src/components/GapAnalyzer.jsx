@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import '../styles/GapAnalyzer.css';
 
 const apiUrl = process.env.API_URL;
 
@@ -70,21 +71,29 @@ const GapAnalyzer = () => {
     }, []);
 
     return (
-        <div>
+        <div className="gap-container">
             <h2>Gaps</h2>
-            <form>
-                <input 
-                    type="number"
-                    value={count}
-                    onChange={handleInputChange}
-                /> 
-            </form>
+            <div ClassName="color-form-numbers">
+                <form>
+                    <input 
+                        type="number"
+                        value={count}
+                        onChange={handleInputChange}
+                    /> 
+                </form>
+
+            </div>
             {loading && <p>Loading...</p>} 
             <div>
                 {/* Display the gap occurrences */}
                 {Object.entries(gapOccurrences).map(([targetNumber, occurrences]) => (
                     <div key={targetNumber}>
-                        <h3>number {targetNumber}:</h3>
+                        <div className="image-wrapper-color">
+                            <img
+                                src={`https://luckyrinawaybucket.s3.amazonaws.com/colors/Roll${targetNumber}.png`} 
+                                alt={`Number ${targetNumber}`}
+                            />
+                        </div>
                         <ul>
                             {Object.entries(occurrences).map(([gapLength, occurrence]) => (
                                 <li key={gapLength}>Gap: {gapLength}, Occurred: {occurrence} times</li>

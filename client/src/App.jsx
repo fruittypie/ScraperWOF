@@ -14,7 +14,7 @@ function App() {
   <div className="row">
     <div className="col-md-8">
       <div className="row">
-        <div className="col-md-6" style={{ height: '25vh', backgroundColor: '#F5F5DC' }}>
+        <div className="col-md-6" style={{ height: '25vh', backgroundColor: '#343434' }}>
         <div className="row justify-content-center">         
           <NumberProbabilityCalculator />   
         </div>
@@ -29,7 +29,7 @@ function App() {
         </div>
       </div>
     </div>
-    <div className="col-md-4" style={{ backgroundColor: '#F5F5DC' }}>
+    <div className="col-md-4" style={{ backgroundColor: '#343434' }}>
       <GapAnalyzer />  
     </div>
   </div>
