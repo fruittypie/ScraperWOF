@@ -101,14 +101,22 @@ app.get('/api/number', async (req, res) => {
         .sort({timestamp: -1})
         .limit(1)
         .next()
-        //const count = await database.collection(collectionName).countDocuments();
         res.json(number);
     } catch (error) {
-        console.error('Failed to fetch numbers from the db', error);
+        console.error('Failed to fetch number from the db', error);
         res.status(500).json({ error:'Internal server error' });
     }
 });
 
+app.get('/api/total', async (req, res) => { 
+    try {
+        const total = await database.collection(collectionName).countDocuments();
+        res.json(total);
+    } catch (error) {
+        console.error('Failed to fetch number from the db', error);
+        res.status(500).json({ error:'Internal server error' });
+    }
+});
 
 
 server.on('close', () => {

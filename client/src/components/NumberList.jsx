@@ -1,7 +1,8 @@
 // src/NumberList.jsx
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setLatestNumber } from '../../state/number/numberSlice';
+import { fetchTotalNumber } from '../../state/number/totalNumSlice';
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
 import { io } from 'socket.io-client';
@@ -45,6 +46,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
       setNumbers((prevNumbers) => [newNumber, ...prevNumbers]);
 
       dispatch(setLatestNumber(newNumber.value));
+      dispatch(fetchTotalNumber());
     });
 
     if(!numbers.length) {
