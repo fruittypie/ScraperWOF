@@ -50,14 +50,6 @@ const connectToDB = async () => {
     }
 };
 
-io.on('connection', (socket) => {
-    console.log('Client connected');
-
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-  });
-});
-
 app.get('/api/draws', async (req, res) => {
     try {
         const {count} = req.query;
@@ -71,7 +63,6 @@ app.get('/api/draws', async (req, res) => {
             .sort({timestamp: -1})
             .limit(countNum)
             .toArray();
-        
         res.json(draws);
     } catch (error) {
         console.error('Error fetching draws:', error);
