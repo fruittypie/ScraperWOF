@@ -15,7 +15,6 @@ export const fetchTotalNumber = createAsyncThunk(
     try {
       const response = await axios.get(`${apiUrl}/total`);
       const totalNumber = response.data;
-      console.log(totalNumber)
       return totalNumber;
     } catch (error) {
       throw error;

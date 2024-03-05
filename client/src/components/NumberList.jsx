@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setLatestNumber } from '../../state/number/numberSlice';
 import { fetchTotalNumber } from '../../state/number/totalNumSlice';
+import { fetchDrawValues } from '../../state/number/drawValuesSlice';
+
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
 import { io } from 'socket.io-client';
@@ -47,6 +49,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
 
       dispatch(setLatestNumber(newNumber.value));
       dispatch(fetchTotalNumber());
+      dispatch(fetchDrawValues(200))
     });
 
     if(!numbers.length) {
