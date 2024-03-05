@@ -1,0 +1,9 @@
+.number-wrapper-color img {
+    height: 20px;
+}
+
+.current-gap-container{
+    color: #C8CCCE;
+    display: flex;
+    justify-content: space-between; 
+}

@@ -2,6 +2,7 @@ import './App.css';
 import React, { useState } from 'react';
 import NumberList from './components/NumberList.jsx';
 import CurrentNumber from './components/CurrentNumber.jsx';
+import CurrentGap from './components/CurrentGap.jsx';
 import GapAnalyzer from './components/GapAnalyzer.jsx';
 import NumberProbabilityCalculator from './components/NumberProbabilityCalculator.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -30,6 +31,7 @@ function App() {
       </div>
     </div>
     <div className="col-md-4" style={{ backgroundColor: '#343434' }}>
+      <CurrentGap />
       <GapAnalyzer />  
     </div>
   </div>
