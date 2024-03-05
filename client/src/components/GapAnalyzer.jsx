@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import '../styles/GapAnalyzer.css';
+
 
 const apiUrl = process.env.API_URL;
 
@@ -27,6 +29,7 @@ async function findGapOccurrences(arr, num) {
 }
 
 const GapAnalyzer = () => {
+    const dispatch = useDispatch();
     const [count, setCount] = useState(0);
     const [gapOccurrences, setGapOccurrences] = useState({});
     const [loading, setLoading] = useState(false);
@@ -38,7 +41,8 @@ const GapAnalyzer = () => {
     };
 
     useEffect(() => {
-        async function fetchDataFromBackend() {
+        if (count > 0) {
+        async function fetchDataFromBackend(count) {
             setLoading(true);
             try {
                 const response = await axios.get(`${apiUrl}/draws?count=${count}`);
@@ -50,7 +54,7 @@ const GapAnalyzer = () => {
         }
 
         async function fetchDataAndProcess() {
-            const responseData = await fetchDataFromBackend();
+            const responseData = await fetchDataFromBackend(count);
             const targetGapOccurrences = {};
 
             for (const targetNumber of targetNumbers) {
@@ -64,16 +68,17 @@ const GapAnalyzer = () => {
         }
 
         fetchDataAndProcess();
+    }
     }, [count]); 
 
     useEffect(() => {
         setCount(70000);
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className="gap-container">
             <h2>Gaps</h2>
-            <div ClassName="color-form-numbers">
+            <div className="color-form-numbers">
                 <form>
                     <input 
                         type="number"
@@ -85,10 +90,9 @@ const GapAnalyzer = () => {
             </div>
             {loading && <p>Loading...</p>} 
             <div>
-                {/* Display the gap occurrences */}
                 {Object.entries(gapOccurrences).map(([targetNumber, occurrences]) => (
                     <div key={targetNumber}>
-                        <div className="image-wrapper-color">
+                        <div className="number-wrapper-color">
                             <img
                                 src={`https://luckyrinawaybucket.s3.amazonaws.com/colors/Roll${targetNumber}.png`} 
                                 alt={`Number ${targetNumber}`}
