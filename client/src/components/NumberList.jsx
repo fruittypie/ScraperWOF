@@ -49,7 +49,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
 
       dispatch(setLatestNumber(newNumber.value));
       dispatch(fetchTotalNumber());
-      dispatch(fetchDrawValues(200))
+      dispatch(fetchDrawValues(200));
     });
 
     if(!numbers.length) {

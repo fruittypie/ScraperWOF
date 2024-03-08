@@ -32,7 +32,6 @@ function App() {
     </div>
     <div className="col-md-4" style={{ backgroundColor: '#343434' }}>
       <CurrentGap />
-      <GapAnalyzer />  
     </div>
   </div>
   );
