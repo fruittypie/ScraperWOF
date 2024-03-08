@@ -1,7 +1,14 @@
 .number-wrapper-color img {
+    margin-left: 8px;
+    margin-bottom: 5px;
     height: 20px;
 }
 
 .gap-container{
     color: #C8CCCE;
+}
+
+.title-with-image {
+    align-items: center;
+    display: flex;
 }
