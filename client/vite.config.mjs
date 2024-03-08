@@ -27,6 +27,7 @@ export default defineConfig(({ command, mode }) => {
         define: {
             'process.env.API_URL': JSON.stringify(env.API_URL),
             'process.env.HOST_URL': JSON.stringify(env.HOST_URL),
+            'process.env.WEBHOOK_URL': JSON.stringify(env.WEBHOOK_URL),
         },
     };
 });
