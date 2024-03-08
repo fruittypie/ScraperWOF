@@ -123,13 +123,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   return (
     <>
         <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            marginLeft: '3rem',
-            marginRight: '3rem',
-          }}
+          className='numbers-list-container'
         >
           {numbers.slice(0, displayCount).map((number, index) => (
             <LazyLoad key={`${number.timestamp}-${number._id}`} height={50} offset={10}>
@@ -163,7 +157,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   
       {displayCount < MAX_NUMBERS && (
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <button onClick={loadMore} disabled={loading}>
+          <button className='button-load' onClick={loadMore} disabled={loading}>
             Load More
           </button>
         </div>
