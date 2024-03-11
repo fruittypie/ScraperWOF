@@ -66,24 +66,27 @@ const NumberProbabilityCalculator = () => {
 
     return (
         <div className="col-md-8 game-stats-container">
-            <h2>Statistics</h2>
-            <form >
-                <input 
-                    type="number"
-                    value={count}
-                    onChange={handleInputChange}
-                /> 
-            </form>
+            <div className="row align-items-center">
+                <h2>Statistics</h2>
+                <form >
+                    <input 
+                        type="number"
+                        value={count}
+                        onChange={handleInputChange}
+                    /> 
+                </form>
+            </div>
             <div>
                 <RollPictures />
                 <div className="percentages-container">
                     {Object.entries(valuePercentages).map(([value, percentage]) => (
-                        <div key={value} className="percentage-item">
-                            {percentage.toFixed(2)}%
-                        </div>
+                    <div key={value} className="percentage-item">
+                        {percentage.toFixed(2)}%
+                    </div>
                     ))}
                 </div>
             </div> 
+            
         </div>
     );
 };
