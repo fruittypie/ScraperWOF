@@ -14,9 +14,9 @@ const TotalNumber = () => {
   
   return (
     <div className="total-number">
-        <h4>
+        <h6>
           {`Total number in db: ${totalNumber}`}
-        </h4>
+        </h6>
     </div>
   );
 };
