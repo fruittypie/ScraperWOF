@@ -12,3 +12,7 @@
     width: 25px; 
     height: auto;
 }
+
+.image-wrapper img.selected {
+    box-shadow: 0 0 5px rgb(201, 200, 200); 
+}

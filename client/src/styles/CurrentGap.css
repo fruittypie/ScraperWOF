@@ -2,8 +2,11 @@
     height: 20px;
 }
 
-.current-gap-container{
+.number-wrapper-color{
     color: #C8CCCE;
+}
+.current-gap-container{
+    
     display: flex;
     justify-content: space-between; 
 }

@@ -4,11 +4,29 @@
     height: 20px;
 }
 
-.gap-container{
-    color: #C8CCCE;
-}
-
 .title-with-image {
     align-items: center;
     display: flex;
+}
+.table-responsive{
+    margin-bottom: 5px;
+}
+
+.table-container {
+    display: flex;
+}
+
+.table-container table {
+    flex: 1;
+    margin-right: 20px;
+}
+
+table td,
+table th {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 10px;
+    line-height: 3px; 
+    white-space: nowrap;
 }
