@@ -17,7 +17,7 @@ const CurrentNumber = () => {
   
   return (
     <div className="current-number">
-      <h2>Latest Number</h2>
+      <h3>Latest Number</h3>
       {loading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
       {latestNumber && (
