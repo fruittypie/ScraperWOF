@@ -75,7 +75,6 @@ app.get('/api/numbers', async (req, res) => {
         const numbers = await database.collection(collectionName)
         .find()
         .sort({timestamp: -1})
-        .limit(10000)
         .toArray();
 
         res.json(numbers);

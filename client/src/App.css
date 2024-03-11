@@ -2,6 +2,6 @@ body {
   text-align: center;
   background-color: #282c34;
   margin: 0;
-  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
 }
-
