@@ -54,7 +54,7 @@ const CurrentGap = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchDrawValues(200));
+    dispatch(fetchDrawValues());
   }, [dispatch]);
 
   useEffect(() => {
@@ -89,12 +89,13 @@ const CurrentGap = () => {
   return (
     <div>
       <div className='col-md-8 number-wrapper-color'>
-        <RollPictures onClick={handleSelectNumber} />
+        <h3>Current Gap</h3>
+        <RollPictures onClick={handleSelectNumber} selectedNumber={selectedNumber} />
         <div className='current-gap-container'>
           {Object.entries(gapResult).map(([index, value]) => (
             <p key={index}>gap: {value}</p>
           ))}
-        </div>
+          </div>
       </div>
       {selectedNumber !== null && (
         <GapAnalyzer selectedNumber={selectedNumber} />
