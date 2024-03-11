@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setLatestNumber } from '../../state/number/numberSlice';
 import { fetchTotalNumber } from '../../state/number/totalNumSlice';
 import { fetchDrawValues } from '../../state/number/drawValuesSlice';
+import { fetchAllNumbers } from '../../state/number/AllNumbersSlice';
 
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
@@ -33,7 +34,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   useEffect(() => {
     const fetchNumbers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/numbers`);
+        const response = await axios.get(`${apiUrl}/draws?count=2000`);
         setNumbers(response.data);
 
       } catch (error) {
@@ -50,6 +51,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
       dispatch(setLatestNumber(newNumber.value));
       dispatch(fetchTotalNumber());
       dispatch(fetchDrawValues(200));
+      dispatch(fetchAllNumbers());
     });
 
     if(!numbers.length) {
@@ -123,8 +125,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   return (
     <>
         <div
-          className='numbers-list-container'
-        >
+          className='numbers-list-container'>
           {numbers.slice(0, displayCount).map((number, index) => (
             <LazyLoad key={`${number.timestamp}-${number._id}`} height={50} offset={10}>
               <div style={{ marginRight: '3px', marginLeft: '3px' }}>
@@ -157,7 +158,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
   
       {displayCount < MAX_NUMBERS && (
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <button className='button-load' onClick={loadMore} disabled={loading}>
+          <button type="button" className="btn btn-secondary btn-sm load-btn" onClick={loadMore} disabled={loading}>
             Load More
           </button>
         </div>
