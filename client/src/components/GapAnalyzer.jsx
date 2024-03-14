@@ -1,7 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { fetchAllNumbers } from '../../state/number/AllNumbersSlice';
 import '../styles/GapAnalyzer.css';
+import axios from 'axios';
+const apiUrl = process.env.API_URL;
+
 
 async function findGapOccurrences(arr, num) {
     let currentGap = 0;
@@ -25,9 +27,26 @@ async function findGapOccurrences(arr, num) {
     return gapOccurrences;
 }
 
-const GapAnalyzer = ({ selectedNumber }) => {
+const getHighlightColor = (selectedNumber) => {
+    switch (selectedNumber) {
+      case '1':
+        return 'yellow';
+      case '3':
+        return 'green';
+      case '5':
+        return 'blue';
+      case '10':
+        return 'violet';
+      case '20':
+        return 'orange';
+      default:
+        return 'yellow';
+    }
+  };
+
+const GapAnalyzer = ({ selectedNumber, gapResult }) => {
     const dispatch = useDispatch();
-    const allNumbers = useSelector((state) => state.allNumbers.allNumbers);
+    // const allNumbers = useSelector((state) => state.allNumbers.allNumbers);
     const [gapOccurrences, setGapOccurrences] = useState({}); 
 
     const gapEntries = Object.entries(gapOccurrences);
@@ -37,21 +56,22 @@ const GapAnalyzer = ({ selectedNumber }) => {
     const thirdThird = gapEntries.slice(2 * thirdLength);
 
     useEffect(() => {
-        async function fetchDataAndProcess() {
-            if (!selectedNumber || !allNumbers) return;
-            const values = allNumbers.map(item => item.value); 
-            const gapOccurrences = await findGapOccurrences(values, selectedNumber);
+        async function fetchGapOccurrences(selectedNumber) {
+            if (!selectedNumber) return;
+            try {
+              const response = await axios.get(`${apiUrl}/num?selectedNumber=${selectedNumber}`);
+              const data = response.data;
+              
+              setGapOccurrences(data);
+            } catch (error) {
+              console.error('Error fetching gap occurrences:', error);
+            }
+          }
+        fetchGapOccurrences(selectedNumber);
+    }, [selectedNumber]);
 
-            setGapOccurrences(gapOccurrences);
-        }
 
-        fetchDataAndProcess();
-
-    }, [allNumbers, selectedNumber]);
-
-    useEffect(() => {
-        dispatch(fetchAllNumbers());
-    }, [dispatch]);
+    const highlightColor = getHighlightColor(selectedNumber);
 
     return (
         <div className="mask d-flex align-items-center h-100">
@@ -67,12 +87,36 @@ const GapAnalyzer = ({ selectedNumber }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {firstThird.map(([gapLength, occurrence]) => (
-                                        <tr key={gapLength}>
-                                            <td>{gapLength}</td> 
-                                            <td>{occurrence}</td> 
-                                        </tr>
-                                    ))}
+                                    {firstThird.map(([gapLength, occurrence]) => {
+                                        return (
+                                            <tr key={gapLength} className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : ''}>
+                                                <td>{gapLength}</td> 
+                                                <td>{occurrence}</td> 
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="col">
+                        <div className="table-responsive">
+                            <table className="table table-dark table-bordered mb-0 ">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">GAP</th>
+                                        <th scope="col">TIMES</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {secondThird.map(([gapLength, occurrence]) => {
+                                        return (
+                                            <tr key={gapLength} className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : ''}>
+                                                <td>{gapLength}</td> 
+                                                <td>{occurrence}</td> 
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
@@ -87,32 +131,14 @@ const GapAnalyzer = ({ selectedNumber }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {secondThird.map(([gapLength, occurrence]) => (
-                                        <tr key={gapLength}>
-                                            <td>{gapLength}</td> 
-                                            <td>{occurrence}</td> 
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="col">
-                        <div className="table-responsive">
-                            <table className="table table-dark table-bordered mb-0">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">GAP</th>
-                                        <th scope="col">TIMES</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {thirdThird.map(([gapLength, occurrence]) => (
-                                        <tr key={gapLength}>
-                                            <td>{gapLength}</td> 
-                                            <td>{occurrence}</td> 
-                                        </tr>
-                                    ))}
+                                    {thirdThird.map(([gapLength, occurrence]) => {
+                                        return (
+                                            <tr key={gapLength} className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : ''}>
+                                                <td>{gapLength}</td> 
+                                                <td>{occurrence}</td> 
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>

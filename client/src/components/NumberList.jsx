@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { setLatestNumber } from '../../state/number/numberSlice';
 import { fetchTotalNumber } from '../../state/number/totalNumSlice';
 import { fetchDrawValues } from '../../state/number/drawValuesSlice';
-import { fetchAllNumbers } from '../../state/number/AllNumbersSlice';
 
 import axios from 'axios';
 import LazyLoad from 'react-lazy-load';
@@ -46,22 +45,22 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
 
     // Listen for the 'newNumber' event
     socket.on('newNumber', (newNumber) => {
-      setNumbers((prevNumbers) => [newNumber, ...prevNumbers]);
+      setNumbers((prevNumbers) => {
+        const updatedNumbers = [newNumber, ...prevNumbers.slice(0, MAX_NUMBERS - 1)];
+        return updatedNumbers;
+      });
 
       dispatch(setLatestNumber(newNumber.value));
       dispatch(fetchTotalNumber());
       dispatch(fetchDrawValues(200));
-      dispatch(fetchAllNumbers());
     });
 
-    if(!numbers.length) {
-      fetchNumbers();
-    }
+    fetchNumbers();
 
     return () => {
       socket.disconnect();
     };
-  }, [dispatch, numbers]);
+  }, [dispatch]);
 
   const loadMore = () => {
     setLoading(true);
@@ -127,7 +126,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
         <div
           className='numbers-list-container'>
           {numbers.slice(0, displayCount).map((number, index) => (
-            <LazyLoad key={`${number.timestamp}-${number._id}`} height={50} offset={10}>
+            <LazyLoad key={`${number._id}`} height={50} offset={10}>
               <div style={{ marginRight: '3px', marginLeft: '3px' }}>
                   <img
                     className={`

@@ -50,6 +50,27 @@ const connectToDB = async () => {
     }
 };
 
+async function findGapOccurrences(values, num) {
+    const gapOccurrences = {};
+    let currentGap = 0;
+
+    for (let i = 0; i < values.length; i++) {
+        if (values[i] == num) {
+            if (currentGap > 0) {
+                if (gapOccurrences[currentGap]) {
+                    gapOccurrences[currentGap]++;
+                } else {
+                    gapOccurrences[currentGap] = 1;
+                }
+            }
+            currentGap = 0;
+        } else {
+            currentGap++;
+        }
+    }
+       return gapOccurrences;
+};
+
 app.get('/api/draws', async (req, res) => {
     try {
         const {count} = req.query;
@@ -59,7 +80,7 @@ app.get('/api/draws', async (req, res) => {
         }
     
         const draws = await database.collection(collectionName)
-            .find()
+            .find({}, { projection: { _id: 1, value: 1 } })
             .sort({timestamp: -1})
             .limit(countNum)
             .toArray();
@@ -70,10 +91,29 @@ app.get('/api/draws', async (req, res) => {
     }
 });
 
+app.get('/api/num', async (req, res) => {
+    try {
+        const {selectedNumber} = req.query;
+        console.log(selectedNumber)
+        const valuesArray = await database.collection(collectionName)
+        .find({}, { projection: {value: 1 } })
+        .sort({ timestamp: -1 })
+        .toArray();
+        const values = valuesArray.map(doc => doc.value);
+        const gapOccurrences = await findGapOccurrences(values, selectedNumber);
+        console.log(JSON.stringify(gapOccurrences, null, 2));
+
+        res.json(gapOccurrences);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.get('/api/numbers', async (req, res) => { 
     try {
         const numbers = await database.collection(collectionName)
-        .find()
+        .find({}, { projection: { _id: 1, value: 1 } })
         .sort({timestamp: -1})
         .toArray();
 
@@ -87,7 +127,7 @@ app.get('/api/numbers', async (req, res) => {
 app.get('/api/number', async (req, res) => { 
     try {
         const number = await database.collection(collectionName)
-        .find()
+        .find({}, { projection: { _id: 1, value: 1 } })
         .sort({timestamp: -1})
         .limit(1)
         .next()
@@ -107,7 +147,6 @@ app.get('/api/total', async (req, res) => {
         res.status(500).json({ error:'Internal server error' });
     }
 });
-
 
 server.on('close', () => {
     if (client) {

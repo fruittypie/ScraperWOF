@@ -46,7 +46,6 @@ const CurrentGap = () => {
   const dispatch = useDispatch();
   const drawValues = useSelector((state) => state.drawValues.drawValues);
   const [gapResult, setGapResult] = useState({});
-  const [sentNotifications, setSentNotifications] = useState({});
   const [selectedNumber, setSelectedNumber] = useState(null);
   
   const handleSelectNumber = (number) => {
@@ -65,26 +64,22 @@ const CurrentGap = () => {
       }
     };
     fetchAndCalculateGaps();
-  }, [drawValues]);
+  }, [drawValues, selectedNumber]);
+  
 
   useEffect(() => {
-    // Check conditions based on counts
     Object.entries(conditions).forEach(([number, gap]) => {
-      if (gapResult[number] === gap && !sentNotifications[`${number}-${gap}`]) {
+      if (gapResult[number] === gap) {
         sendNotificationToDiscord(number, gap);
-        setSentNotifications((prevSentNotifications) => ({
-          ...prevSentNotifications,
-          [`${number}-${gap}`]: true,
-        }));
       }
     });
-  }, [gapResult, sentNotifications]);
+  }, [gapResult]);
 
   useEffect(() => {
-    return () => {
-      setSentNotifications({});
-    };
-  }, []);
+    if (selectedNumber === null) {
+      handleSelectNumber('1');
+    }
+  }, [selectedNumber, gapResult]);
 
   return (
     <div>
@@ -98,7 +93,7 @@ const CurrentGap = () => {
           </div>
       </div>
       {selectedNumber !== null && (
-        <GapAnalyzer selectedNumber={selectedNumber} />
+        <GapAnalyzer selectedNumber={selectedNumber} gapResult={gapResult} />
       )}
     </div>
     
