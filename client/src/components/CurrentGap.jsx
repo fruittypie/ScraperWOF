@@ -47,6 +47,7 @@ const CurrentGap = () => {
   const drawValues = useSelector((state) => state.drawValues.drawValues);
   const [gapResult, setGapResult] = useState({});
   const [selectedNumber, setSelectedNumber] = useState(null);
+  const [notificationSent, setNotificationSent] = useState(false);
   
   const handleSelectNumber = (number) => {
     setSelectedNumber(number); 
@@ -61,6 +62,7 @@ const CurrentGap = () => {
       if (drawValues) {
         const calculatedGapResult = await calculateGaps(drawValues);
         setGapResult(calculatedGapResult);
+        setNotificationSent(false);
       }
     };
     fetchAndCalculateGaps();
@@ -73,7 +75,8 @@ const CurrentGap = () => {
         sendNotificationToDiscord(number, gap);
       }
     });
-  }, [gapResult]);
+    setNotificationSent(true);
+  }, [gapResult, notificationSent]);
 
   useEffect(() => {
     if (selectedNumber === null) {
