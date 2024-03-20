@@ -5,28 +5,6 @@ import axios from 'axios';
 const apiUrl = process.env.API_URL;
 
 
-async function findGapOccurrences(arr, num) {
-    let currentGap = 0;
-    const gapOccurrences = {}; 
-
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] === num) {
-            if (currentGap > 0) {
-                if (gapOccurrences[currentGap]) {
-                    gapOccurrences[currentGap]++;
-                } else {
-                    gapOccurrences[currentGap] = 1;
-                }
-                currentGap = 0;
-            }
-        } else {
-            currentGap++;
-        }
-    }
-
-    return gapOccurrences;
-}
-
 const getHighlightColor = (selectedNumber) => {
     switch (selectedNumber) {
       case '1':
@@ -44,32 +22,39 @@ const getHighlightColor = (selectedNumber) => {
     }
   };
 
-const GapAnalyzer = ({ selectedNumber, gapResult }) => {
+  const GapAnalyzer = ({ selectedNumber, gapResult }) => {
     const dispatch = useDispatch();
-    // const allNumbers = useSelector((state) => state.allNumbers.allNumbers);
-    const [gapOccurrences, setGapOccurrences] = useState({}); 
+    const [gapOccurrences, setGapOccurrences] = useState({});
 
-    const gapEntries = Object.entries(gapOccurrences);
+    const findGapByNumber = (number) => {
+        const entry = Object.values(gapOccurrences).find(
+          (entry) => entry.number == Number(number)
+        );
+        return entry ? entry.gap : {};
+    };
+
+    const selectedNumberGap = findGapByNumber(selectedNumber);
+    const gapEntries = Object.entries(selectedNumberGap);
+    
     const thirdLength = Math.ceil(gapEntries.length / 3);
     const firstThird = gapEntries.slice(0, thirdLength);
     const secondThird = gapEntries.slice(thirdLength, 2 * thirdLength);
     const thirdThird = gapEntries.slice(2 * thirdLength);
 
     useEffect(() => {
-        async function fetchGapOccurrences(selectedNumber) {
-            if (!selectedNumber) return;
-            try {
-              const response = await axios.get(`${apiUrl}/num?selectedNumber=${selectedNumber}`);
-              const data = response.data;
-              
-              setGapOccurrences(data);
-            } catch (error) {
-              console.error('Error fetching gap occurrences:', error);
-            }
+        const fetchGapOccurrences = async () => {
+          try {
+            const response = await axios.get(`${apiUrl}/recalculate`);
+            const data = response.data;
+    
+            setGapOccurrences(data);
+          } catch (error) {
+            console.error('Error fetching gap occurrences:', error);
           }
-        fetchGapOccurrences(selectedNumber);
-    }, [selectedNumber]);
-
+        };
+    
+        fetchGapOccurrences();
+      }, [gapResult]);
 
     const highlightColor = getHighlightColor(selectedNumber);
 
