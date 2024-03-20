@@ -50,26 +50,53 @@ const connectToDB = async () => {
     }
 };
 
-async function findGapOccurrences(values, num) {
+function combineGapResults(newGapResults, existingGapResults) {
+    const combinedData = Object.fromEntries(
+      Object.entries(existingGapResults).map(([key, value]) => {
+        const newGapData = newGapResults[String(value.number)] || {};
+        const combinedGapData = { ...value.gap };
+  
+        for (const gapKey in newGapData) {
+          if (combinedGapData[gapKey]) {
+            combinedGapData[gapKey] += newGapData[gapKey];
+          } else {
+            combinedGapData[gapKey] = newGapData[gapKey];
+          }
+        }
+  
+        return [key, { ...value, gap: combinedGapData }];
+      })
+    );
+  
+    return combinedData;
+}
+  
+async function findGapOccurrences(values) {
+    const nums = [1, 3, 5, 10, 20];
     const gapOccurrences = {};
-    let currentGap = 0;
+    
+    const numbers = values.map(obj => parseInt(obj.value));
 
-    for (let i = 0; i < values.length; i++) {
-        if (values[i] == num) {
-            if (currentGap > 0) {
-                if (gapOccurrences[currentGap]) {
-                    gapOccurrences[currentGap]++;
-                } else {
-                    gapOccurrences[currentGap] = 1;
+    for (let num of nums) {
+        gapOccurrences[num] = {};
+        let currentGap = 0;
+        for (let i = 0; i < values.length; i++) {
+            if (numbers[i] === num) {
+                if (currentGap > 0) {
+                    if (gapOccurrences[num][currentGap]) {
+                        gapOccurrences[num][currentGap]++;
+                    } else {
+                        gapOccurrences[num][currentGap] = 1;
+                    }
                 }
+                currentGap = 0;
+            } else {
+                currentGap++;
             }
-            currentGap = 0;
-        } else {
-            currentGap++;
         }
     }
-       return gapOccurrences;
-};
+    return gapOccurrences;
+}
 
 app.get('/api/draws', async (req, res) => {
     try {
@@ -94,14 +121,12 @@ app.get('/api/draws', async (req, res) => {
 app.get('/api/num', async (req, res) => {
     try {
         const {selectedNumber} = req.query;
-        console.log(selectedNumber)
         const valuesArray = await database.collection(collectionName)
         .find({}, { projection: {value: 1 } })
         .sort({ timestamp: -1 })
         .toArray();
         const values = valuesArray.map(doc => doc.value);
         const gapOccurrences = await findGapOccurrences(values, selectedNumber);
-        console.log(JSON.stringify(gapOccurrences, null, 2));
 
         res.json(gapOccurrences);
     } catch (err) {
@@ -146,6 +171,73 @@ app.get('/api/total', async (req, res) => {
         console.error('Failed to fetch number from the db', error);
         res.status(500).json({ error:'Internal server error' });
     }
+});
+
+app.get('/api/recalculate', async (req, res) => {
+    try {
+        const gapResultsDB = await database.collection('gapResults').find({}).toArray(); 
+        const totalNumbersDB = await database.collection(collectionName).countDocuments();
+        let processedCount = 0; // Initialize processedCount with 0
+
+        // Get the processed count if the document exists
+        const processedTotalCount = await database.collection('gapResultsTotalCount').findOne({}, { projection: { processedCount: 1 } });
+
+        // If processedTotalCount is not null, update processedCount
+        if (processedTotalCount !== null) {
+            processedCount = processedTotalCount.processedCount;
+        }
+
+
+        const numsDifference = totalNumbersDB - processedCount;
+        
+        if (numsDifference > 10000) {
+            // renew the processedCount in the processedTotalCount db: add the numsDifference to total:
+            processedCount = totalNumbersDB;
+            await database.collection('gapResultsTotalCount').updateOne({}, { $set: { processedCount: processedCount } }, { upsert: true });
+            // get the values from the maim db
+            const values = await database.collection(collectionName)
+                .find({}, { projection: { value: 1 } })
+                .sort({timestamp: -1})
+                .toArray();
+
+            // recalculated the occurences with all numbers
+            const gapResults = await findGapOccurrences(values);  //I get an object here
+
+            // update the db with gaps:
+            for (const number of Object.keys(gapResults)) {
+
+                if (processedTotalCount !== null) {
+                // If document exists, update the gap numbers
+                    const existingDoc = await processedTotalCount.findOne({ number: parseInt(number) });
+                    existingDoc.gap = gapResults[number];
+                    await processedTotalCount.replaceOne({ _id: existingDoc._id }, existingDoc);
+                } else {
+                // If document doesn't exist, create a new one
+                    const newDoc = {
+                    number: parseInt(number),
+                    gap: gapResults[number]
+                    };
+                    await database.collection('gapResults').insertOne(newDoc);
+                }
+            }
+            res.json(gapResults);
+        } else {
+            // extract the difference values from the db
+            const differenceValues = await database.collection(collectionName)
+            .find({}, { projection: { value: 1 } })
+            .sort({timestamp: -1})
+            .limit(numsDifference)
+            .toArray();
+            // Calculate gaps for the difference
+            const newDifferenceGapResults = await findGapOccurrences(differenceValues);
+            // Combine with existing gapresults
+            const combinedGapResults = (gapResultsDB.length === 0) ? {} : combineGapResults(newDifferenceGapResults, gapResultsDB);
+            res.json(combinedGapResults);
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
 });
 
 server.on('close', () => {
