@@ -35,8 +35,8 @@ const sendNotificationToDiscord = async (number, gap) => {
 };
 
 const conditions = {
-  '1': 12,
-  '3': 15,
+  '1': 13,
+  '3': 17,
   '5': 25,
   '10': 60,
   '20': 120,
@@ -54,7 +54,7 @@ const CurrentGap = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchDrawValues());
+    dispatch(fetchDrawValues(200));
   }, [dispatch]);
 
   useEffect(() => {
@@ -67,7 +67,6 @@ const CurrentGap = () => {
     };
     fetchAndCalculateGaps();
   }, [drawValues, selectedNumber]);
-  
 
   useEffect(() => {
     Object.entries(conditions).forEach(([number, gap]) => {
