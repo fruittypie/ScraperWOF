@@ -22,6 +22,22 @@ const getHighlightColor = (selectedNumber) => {
     }
   };
 
+  const fillMissingGaps = (combinedGapResults) => {
+    // Iterate over each gap object
+    for (const gapObject of Object.values(combinedGapResults)) {
+      const maxGapKey = Math.max(...Object.keys(gapObject.gap).map(Number));
+      for (let i = 1; i <= maxGapKey; i++) {
+        // Check if the current key is missing
+        if (!(i in gapObject.gap)) {
+          gapObject.gap[i] = 0;
+        }
+      }
+      // Sort in ascending order
+      gapObject.gap = Object.fromEntries(Object.entries(gapObject.gap).sort(([a], [b]) => a - b));
+    }
+    return combinedGapResults;
+  };
+
   const GapAnalyzer = ({ selectedNumber, gapResult }) => {
     const dispatch = useDispatch();
     const [gapOccurrences, setGapOccurrences] = useState({});
@@ -46,8 +62,8 @@ const getHighlightColor = (selectedNumber) => {
           try {
             const response = await axios.get(`${apiUrl}/recalculate`);
             const data = response.data;
-    
-            setGapOccurrences(data);
+            const updatedData = fillMissingGaps(data); 
+            setGapOccurrences(updatedData);
           } catch (error) {
             console.error('Error fetching gap occurrences:', error);
           }
