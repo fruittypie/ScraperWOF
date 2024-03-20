@@ -47,7 +47,6 @@ const RollPictures = ({ onClick, selectedNumber  }) => {
                     className={selectedNumber === '20' ? 'selected' : ''}
                 />
             </div>
-            
         </div>
   
         

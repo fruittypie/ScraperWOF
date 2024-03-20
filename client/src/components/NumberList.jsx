@@ -97,7 +97,7 @@ const NumberList = ({ selectedNumbers, setSelectedNumbers }) => {
     if (e.target.tagName !== 'IMG') {
       setStartIndex(null);
       setIsMouseDown(false);
-      setSelectedValues([]); // Clear selected values when mouse is released outside the image
+      setSelectedValues([]);
     } else {
       // Mouse released on the image
       setIsMouseDown(false);
