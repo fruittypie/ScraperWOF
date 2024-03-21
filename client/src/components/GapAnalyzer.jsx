@@ -1,8 +1,58 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import '../styles/GapAnalyzer.css';
 import axios from 'axios';
+
 const apiUrl = process.env.API_URL;
+
+function calculateGameStrategy(totalSum, selectedNumber, currentBet) {
+    let moneySpent = 0;
+    let roundNumber = 1;
+    let betMultiplier = 0;
+
+    // Set betMultiplier based on selectedNumber
+    switch (selectedNumber) {
+        case 1:
+            betMultiplier = 2;
+            break;
+        case 3:
+            betMultiplier = 4;
+            break;
+        case 5:
+            betMultiplier = 6;
+            break;
+        case 10:
+            betMultiplier = 11;
+            break;
+        case 20:
+            betMultiplier = 21;
+            break;
+    }
+  
+    const betData = [];
+  
+    while (moneySpent < totalSum) {
+      const potentialWin = currentBet * betMultiplier;
+      const potentialProfit = potentialWin - (moneySpent + currentBet);
+  
+      if (potentialProfit <= 0) {
+        currentBet+= 1;
+      } else {
+        const roundInfo = {
+          round: roundNumber,
+          bet: currentBet,
+          totalSpent: moneySpent + currentBet,
+          win: potentialWin,
+          profit: potentialProfit
+        };
+  
+        betData.push(roundInfo);
+        moneySpent += currentBet;
+        roundNumber++;
+        currentBet = 1;
+      }
+    }
+    return betData;
+  }
 
 
 const getHighlightColor = (selectedNumber) => {
@@ -39,8 +89,8 @@ const getHighlightColor = (selectedNumber) => {
   };
 
   const GapAnalyzer = ({ selectedNumber, gapResult }) => {
-    const dispatch = useDispatch();
     const [gapOccurrences, setGapOccurrences] = useState({});
+    const [betData, setBetData] = useState([]);
 
     const findGapByNumber = (number) => {
         const entry = Object.values(gapOccurrences).find(
@@ -71,6 +121,11 @@ const getHighlightColor = (selectedNumber) => {
     
         fetchGapOccurrences();
       }, [gapResult]);
+
+    useEffect(() => {
+        const gameData = calculateGameStrategy(1000, selectedNumber, 1);
+        setRoundData(gameData);
+    }, [selectedNumber]);
 
     const highlightColor = getHighlightColor(selectedNumber);
 
