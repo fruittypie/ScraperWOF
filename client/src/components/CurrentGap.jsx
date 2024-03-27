@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import RollPictures from './RollPictures';
 import GapAnalyzer from './GapAnalyzer';
+import SettingsCollapse from './SettingsCollapse';
 import { fetchDrawValues } from '../../state/number/drawValuesSlice';
 import '../styles/CurrentGap.css';
+import { ChevronUp, ChevronDown } from 'react-bootstrap-icons';
 import axios from 'axios';
 
 async function calculateGaps(nums) {
@@ -48,9 +50,14 @@ const CurrentGap = () => {
   const [gapResult, setGapResult] = useState({});
   const [selectedNumber, setSelectedNumber] = useState(null);
   const [notificationSent, setNotificationSent] = useState(false);
-  
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const handleToggleSettings = () => {
+    setIsSettingsOpen(!isSettingsOpen);
+  };
+
   const handleSelectNumber = (number) => {
-    setSelectedNumber(number); 
+    setSelectedNumber(number);
   };
 
   useEffect(() => {
@@ -66,7 +73,7 @@ const CurrentGap = () => {
       }
     };
     fetchAndCalculateGaps();
-  }, [drawValues, selectedNumber]);
+  }, [drawValues]);
 
   useEffect(() => {
     Object.entries(conditions).forEach(([number, gap]) => {
@@ -85,20 +92,36 @@ const CurrentGap = () => {
 
   return (
     <div>
-      <div className='col-md-8 number-wrapper-color'>
-        <h3>Current Gap</h3>
+      <div className='col-md-10 number-wrapper-color'>
+      <div className='row'>
+        <div className='col'>
+          <h6>Current Gap</h6>
+        </div>
+        <div className='col-auto'>
+        <span
+        onClick={handleToggleSettings}
+        style={{ cursor: 'pointer' }}
+        aria-expanded={isSettingsOpen}
+        aria-controls='settings-collapse'
+      >
+        {isSettingsOpen ? <ChevronDown className="ml-2" /> : <ChevronUp className="ml-2" />}
+        Settings
+      </span>
+        </div>
+      </div>
         <RollPictures onClick={handleSelectNumber} selectedNumber={selectedNumber} />
-        <div className='current-gap-container'>
-          {Object.entries(gapResult).map(([index, value]) => (
-            <p key={index}>gap: {value}</p>
-          ))}
-          </div>
+      <div className='current-gap-container'>
+        {Object.entries(gapResult).map(([index, value]) => (
+          <p key={index}>gap: {value}</p>
+        ))}
+        </div>
+        <SettingsCollapse isSettingsOpen={isSettingsOpen} selectedNumber={selectedNumber} />
       </div>
       {selectedNumber !== null && (
         <GapAnalyzer selectedNumber={selectedNumber} gapResult={gapResult} />
       )}
     </div>
-    
+
   );
 };
 
