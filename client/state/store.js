@@ -2,8 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import numberReducer from './number/numberSlice';
 import totalNumberReducer from './number/totalNumSlice';
 import drawValuesReducer from './number/drawValuesSlice';
-import selectedNumReducer from './number/SelectedNumber';
 import allNumbersReducer from './number/AllNumbersSlice';
+import formReducer from './settings/settingsData';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +11,7 @@ const store = configureStore({
     totalNum: totalNumberReducer,
     drawValues: drawValuesReducer,
     allNumbers: allNumbersReducer,
+    form: formReducer,
   },
 });
 
