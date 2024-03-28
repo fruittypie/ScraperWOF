@@ -4,7 +4,8 @@ const initialState = {
   bet: '',
   total: '',
   mode: '',
-  skipSteps: 0
+  skipSteps: 0,
+  step: '',
 };
 
 const formSlice = createSlice({
@@ -13,7 +14,7 @@ const formSlice = createSlice({
     reducers: {
       setFormData(state, action) {
         const { bet, total, mode, skipSteps } = action.payload;
-        state.bet = parseInt(bet);
+        state.bet = bet;
         state.total = total;
         state.mode = mode;
         state.skipSteps = skipSteps;
