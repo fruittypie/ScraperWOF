@@ -7,7 +7,8 @@ import axios from 'axios';
 const apiUrl = process.env.API_URL;
 
 function calculateGameStrategy(bet, totalSum, number, mode) {
-    let currentBet = bet;
+
+    let currentBet = Number(bet);
     let numberInt = Number(number);
     let moneySpent = 0;
     let roundNumber = 1;
@@ -38,21 +39,23 @@ function calculateGameStrategy(bet, totalSum, number, mode) {
       const potentialWin = currentBet * betMultiplier;
       const potentialProfit = potentialWin - (moneySpent + currentBet);
 
-      if ((mode === 'safe' && potentialProfit < 0) || (mode === 'risky' && potentialProfit <= 0)) {
-        currentBet+= 1;
+      if ((mode === 'safe' && parseFloat(potentialProfit.toFixed(2)) < 0) || 
+        (mode === 'risky' && parseFloat(potentialProfit.toFixed(2)) <= 0)) 
+      {
+        currentBet+= Number(bet);
       } else {
         const roundInfo = {
           round: roundNumber,
-          bet: currentBet,
+          bet:parseFloat(currentBet.toFixed(2)),
           totalSpent: moneySpent + currentBet,
           win: potentialWin,
-          profit: potentialProfit
-        };
+          profit: parseFloat(potentialProfit.toFixed(2))
+      };
 
         betData.push(roundInfo);
         moneySpent += currentBet;
         roundNumber++;
-        currentBet = bet;
+        currentBet = Number(bet);
       }
     }
     return betData;
@@ -134,6 +137,8 @@ const GapAnalyzer = ({ selectedNumber, gapResult }) => {
       return entry ? entry.gap : {};
   };
 
+
+
   useEffect(() => {
       const fetchGapOccurrences = async () => {
           try {
@@ -174,7 +179,6 @@ const GapAnalyzer = ({ selectedNumber, gapResult }) => {
     const newEntries = [];
     for (let i = 0; i < number; i++) {
       newEntries.push([ i + 1, 0 ]);
-      console.log(newEntries)
     }
     return newEntries;
   };
@@ -217,26 +221,26 @@ const GapAnalyzer = ({ selectedNumber, gapResult }) => {
               {tableParts.map((part, index) => (
                       <div key={index} className="col">
                           <div className="table-responsive">
-                              <table className="table table-dark table-bordered mb-0">
-                                  <thead>
-                                      <tr>
-                                          <th scope="col">GAP</th>
-                                          <th scope="col">TIMES</th>
-                                          <th scope="col">BET</th>
-                                          <th scope="col">$</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                    {part.map(({ gapLength, occurrence, betInfo }) => (
-                                      <tr key={`${gapLength}+${index}`} className='no-border' >
-                                          <td className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : 'border-table'}>{gapLength}</td>
-                                          <td className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : 'border-table'}>{occurrence}</td>
-                                          <td className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : 'border-table'}>{betInfo ? betInfo.bet : '-'}</td>
-                                          <td className="border-end-0" style={{ color: '#212529', backgroundColor: calculateColor(betInfo ? betInfo.profit : null, selectedNumber) }}>{betInfo ? betInfo.profit : '-'}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                              </table>
+                            <table className="table table-dark table-bordered mb-0">
+                              <thead>
+                                  <tr>
+                                      <th scope="col">GAP</th>
+                                      <th scope="col">TIMES</th>
+                                      <th scope="col">BET</th>
+                                      <th scope="col">$</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                {part.map(({ gapLength, occurrence, betInfo }) => (
+                                  <tr key={`${gapLength}+${index}`} className='no-border' >
+                                      <td className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : 'border-table'}>{gapLength}</td>
+                                      <td className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : 'border-table'}>{occurrence}</td>
+                                      <td className={gapLength == gapResult[selectedNumber] ? `highlight-${highlightColor}` : 'border-table'}>{betInfo ? betInfo.bet : '-'}</td>
+                                      <td className="border-end-0" style={{ color: '#212529', backgroundColor: calculateColor(betInfo ? betInfo.profit : null, selectedNumber) }}>{betInfo ? betInfo.profit : '-'}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                       </div>
                   ))}
