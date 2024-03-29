@@ -154,17 +154,26 @@ const GapAnalyzer = ({ selectedNumber, gapResult }) => {
       fetchGapOccurrences();
   }, [gapResult]);
 
-
   useEffect(() => {
-    if (selectedNumber !== undefined && selectedNumber !== null && formData) {
-      // Retrieve totalSum and mode from formData, or use defaults if they are not available
-      const total = formData.total || 1000;
-      const mode = formData.mode || 'safe';
-      const bet = formData.bet || 1;
-      const data = calculateGameStrategy(bet, total, selectedNumber, mode);
-      setBetData(data.reverse());
-      }    
+    const key = `formData_${selectedNumber}`; // Construct the key
+    const savedFormData = JSON.parse(localStorage.getItem(key));
+    const savedTotal = localStorage.getItem('total');
+    if (savedFormData) {
+        const { bet, mode, skipSteps } = savedFormData;
+        // Use saved form data for calculations
+        const totalSum = savedTotal || 1000;
+        const modeValue = mode || 'safe';
+        const betValue = bet || 1;
+        const data = calculateGameStrategy(betValue, totalSum, selectedNumber, modeValue);
+        setBetData(data.reverse());
+        if (skipSteps !== undefined) {
+            const stepCount = parseInt(skipSteps);
+            const newExtraEntries = addExtraEntries(stepCount);
+            setExtraEntries(newExtraEntries); 
+        }
+    }
   }, [selectedNumber, formData]);
+
 
   const highlightColor = getHighlightColor(selectedNumber);
 
