@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setFormData } from '../../state/settings/settingsData';
 
-const SettingsCollapse = () => {
+const SettingsCollapse = ({ isSettingsOpen, selectedNumber }) => {
     const [bet, setBet] = useState('');
-    const [total, setTotal] = useState('');
     const [mode, setMode] = useState('');
     const [skipSteps, setSkipSteps] = useState('');
     const [menuOpen, setMenuOpen] = useState(false);
     const dispatch = useDispatch();
 
     const handleMenuToggle = () => {
-        setMenuOpen(!menuOpen);
+        setMenuOpen(prevState => !prevState); 
     };
 
     const handleModeSelect = (mode) => {
@@ -19,27 +18,34 @@ const SettingsCollapse = () => {
         setMenuOpen(false); 
     };
 
+    useEffect(() => {
+        const key = `formData_${selectedNumber}`; // Construct the key
+        const savedFormData = JSON.parse(localStorage.getItem(key));
+        if (savedFormData) {
+            setBet(savedFormData.bet);
+            setMode(savedFormData.mode);
+            setSkipSteps(savedFormData.skipSteps);
+        }
+    }, [selectedNumber]);
+
     const handleFormSubmit = () => {
         const formData = {
             bet,
-            total,
             mode,
             skipSteps
         };
+        const key = `formData_${selectedNumber}`; // Append selectedNumber to the key
+        localStorage.setItem(key, JSON.stringify(formData));
         dispatch(setFormData(formData));
     };
 
     return (
-        <div>
+        <div style={{ display: isSettingsOpen ? 'block' : 'none' }}>
             {/* First row */}
             <div className="row mb-3 justify-content-between">
                 {/* Bet input */}
                 <div className="col">
                     <input type="text" className="form-control form-control-sm" placeholder="Bet" value={bet} onChange={(e) => setBet(e.target.value)} />
-                </div>
-                {/* Total input */}
-                <div className="col">
-                    <input type="text" className="form-control form-control-sm" placeholder="Total" value={total} onChange={(e) => setTotal(e.target.value)} />
                 </div>
                 {/* Skip steps input */}
                 <div className="col">
