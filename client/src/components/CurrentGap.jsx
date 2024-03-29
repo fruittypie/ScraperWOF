@@ -53,7 +53,7 @@ const CurrentGap = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleToggleSettings = () => {
-    setIsSettingsOpen(!isSettingsOpen);
+    setIsSettingsOpen(prevState => !prevState);
   };
 
   const handleSelectNumber = (number) => {
@@ -92,22 +92,17 @@ const CurrentGap = () => {
 
   return (
     <div>
-      <div className='col-md-10 number-wrapper-color'>
-      <div className='row'>
-        <div className='col'>
-          <h6>Current Gap</h6>
-        </div>
-        <div className='col-auto'>
+      <div className='col-md-12 number-wrapper-color'>
+      <div className="d-flex justify-content-end">
         <span
-        onClick={handleToggleSettings}
-        style={{ cursor: 'pointer' }}
-        aria-expanded={isSettingsOpen}
-        aria-controls='settings-collapse'
-      >
-        {isSettingsOpen ? <ChevronDown className="ml-2" /> : <ChevronUp className="ml-2" />}
-        Settings
-      </span>
-        </div>
+          onClick={handleToggleSettings}
+          style={{ cursor: 'pointer' }}
+          aria-expanded={isSettingsOpen}
+          aria-controls='settings-collapse'
+        >
+          {isSettingsOpen ? <ChevronDown className="ml-2" /> : <ChevronUp className="ml-2" />}
+          Settings
+        </span>
       </div>
         <RollPictures onClick={handleSelectNumber} selectedNumber={selectedNumber} />
       <div className='current-gap-container'>
