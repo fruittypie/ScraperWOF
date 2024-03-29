@@ -65,7 +65,7 @@ const SettingsCollapse = ({ isSettingsOpen, selectedNumber }) => {
                 </div>
                 {/* Submit button */}
                 <div className="col-auto">
-                    <button className="btn btn-sm custom-btn" onClick={handleFormSubmit}>Submit</button>
+                    <button style={{ backgroundColor: '#C8CCCE'}} className="btn btn-sm custom-btn" onClick={handleFormSubmit}>Submit</button>
                 </div>
             </div>
         </div>
