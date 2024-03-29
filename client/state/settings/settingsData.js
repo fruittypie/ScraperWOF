@@ -9,18 +9,15 @@ const initialState = {
 };
 
 const formSlice = createSlice({
-    name: 'form',
-    initialState,
-    reducers: {
-      setFormData(state, action) {
-        const { bet, total, mode, skipSteps } = action.payload;
-        state.bet = bet;
-        state.total = total;
-        state.mode = mode;
-        state.skipSteps = skipSteps;
-      }
+  name: 'form',
+  initialState,
+  reducers: {
+    setFormData(state, action) {
+      return { ...state, ...action.payload };
     }
+  }
 });
+
 export const { setFormData } = formSlice.actions;
 
 export default formSlice.reducer;
