@@ -6,15 +6,19 @@ import { OuterClick } from 'react-outer-click';
 const SettingsCollapse = ({ selectedNumber }) => {
     const [isEditing, setIsEditing] = useState({ bet: false, skipSteps: false });
     const [bet, setBet] = useState('');
-    const [mode, setMode] = useState('risky');
+    const [mode, setMode] = useState('');
     const [skipSteps, setSkipSteps] = useState('');
-    const [menuOpen, setMenuOpen] = useState(false);
     const dispatch = useDispatch();
 
     const handleModeSelect = (selectedMode) => {
-        setMode(prevMode => prevMode === selectedMode ? '' : selectedMode);
-        handleFormSubmit();
+        console.log('Current mode:', mode); 
+        setMode(selectedMode);
     };
+
+    useEffect(() => {
+        console.log('Updated mode:', mode);
+        handleFormSubmit();
+    }, [mode]);
 
     useEffect(() => {
         const key = `formData_${selectedNumber}`; // Construct the key
@@ -35,7 +39,7 @@ const SettingsCollapse = ({ selectedNumber }) => {
             mode,
             skipSteps
         };
-        const key = `formData_${selectedNumber}`; // Append selectedNumber to the key
+        const key = `formData_${selectedNumber}`;
         localStorage.setItem(key, JSON.stringify(formData));
         dispatch(setFormData(formData));
         setIsEditing({ bet: false, skipSteps: false });
@@ -61,9 +65,9 @@ const SettingsCollapse = ({ selectedNumber }) => {
                             onChange={(e) => setBet(e.target.value)}
                         />
                     ) : (
-                        <h5 onClick={() => setIsEditing({ ...isEditing, bet: true })} style={{ color: '#C8CCCE' }}>
-                            {bet}
-                        </h5>
+                        <p onClick={() => setIsEditing({ ...isEditing, bet: true })} style={{ color: '#C8CCCE' }}>
+                            Step:{bet}
+                        </p>
                     )}
                 </div>
                 {/* Skip steps input */}
@@ -77,9 +81,9 @@ const SettingsCollapse = ({ selectedNumber }) => {
                             onChange={(e) => setSkipSteps(e.target.value)}
                         />
                     ) : (
-                        <h5 onClick={() => setIsEditing({ ...isEditing, skipSteps: true })} style={{ color: '#C8CCCE' }}>
+                        <p onClick={() => setIsEditing({ ...isEditing, skipSteps: true })} style={{ color: '#C8CCCE' }}>
                             {skipSteps}
-                        </h5>
+                        </p>
                     )}
                 </div>
                 {/* Mode dropdown */}
@@ -87,14 +91,25 @@ const SettingsCollapse = ({ selectedNumber }) => {
             <div className="btn-group">
                 <button
                     type="button"
-                    className={`btn btn-sm ${mode === 'safe' ? 'btn-primary' : 'btn-secondary'}`}
+                    className={`btn btn-sm ${mode === 'safe' ? 'custom-btn-selected' : 'custom-btn-secondary'}`}
+                    style={{ 
+                        fontWeight: 'bold', 
+                        padding: '2px', 
+                        color: mode === 'safe' ? '#C8CCCE' : '#696c6e', 
+                        textDecoration: mode === 'safe' ? 'underline' : 'none'  }}
                     onClick={() => handleModeSelect('safe')}
                 >
                     Safe
                 </button>
                 <button
                     type="button"
-                    className={`btn btn-sm ${mode === 'risky' ? 'btn-primary' : 'btn-secondary'}`}
+                    className={`btn btn-sm ${mode === 'risky' ? 'custom-btn-selected' : 'custom-btn-secondary'}`}
+                    style={{ 
+                        fontWeight: 'bold', 
+                        padding: '2px', 
+                        color: mode === 'safe' ? '#696c6e' : '#C8CCCE',
+                        textDecoration: mode === 'safe' ? 'none' : 'underline'
+                     }}
                     onClick={() => handleModeSelect('risky')}
                 >
                     Risky
