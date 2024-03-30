@@ -5,7 +5,6 @@ import GapAnalyzer from './GapAnalyzer';
 import SettingsCollapse from './SettingsCollapse';
 import { fetchDrawValues } from '../../state/number/drawValuesSlice';
 import '../styles/CurrentGap.css';
-import { ChevronUp, ChevronDown } from 'react-bootstrap-icons';
 import axios from 'axios';
 
 async function calculateGaps(nums) {
@@ -50,11 +49,6 @@ const CurrentGap = () => {
   const [gapResult, setGapResult] = useState({});
   const [selectedNumber, setSelectedNumber] = useState(null);
   const [notificationSent, setNotificationSent] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
-  const handleToggleSettings = () => {
-    setIsSettingsOpen(prevState => !prevState);
-  };
 
   const handleSelectNumber = (number) => {
     setSelectedNumber(number);
@@ -95,14 +89,11 @@ const CurrentGap = () => {
       <div className='col-md-12 number-wrapper-color'>
       <div className="d-flex justify-content-end">
         <span
-          onClick={handleToggleSettings}
           style={{ cursor: 'pointer' }}
-          aria-expanded={isSettingsOpen}
           aria-controls='settings-collapse'
         >
-          {isSettingsOpen ? <ChevronDown className="ml-2" /> : <ChevronUp className="ml-2" />}
-          Settings
         </span>
+        <SettingsCollapse selectedNumber={selectedNumber} />
       </div>
         <RollPictures onClick={handleSelectNumber} selectedNumber={selectedNumber} />
       <div className='current-gap-container'>
@@ -110,7 +101,6 @@ const CurrentGap = () => {
           <p key={index}>gap: {value}</p>
         ))}
         </div>
-        <SettingsCollapse isSettingsOpen={isSettingsOpen} selectedNumber={selectedNumber} />
       </div>
       {selectedNumber !== null && (
         <GapAnalyzer selectedNumber={selectedNumber} gapResult={gapResult} />

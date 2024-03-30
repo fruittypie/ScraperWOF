@@ -162,7 +162,7 @@ const GapAnalyzer = ({ selectedNumber, gapResult }) => {
         const { bet, mode, skipSteps } = savedFormData;
         // Use saved form data for calculations
         const totalSum = savedTotal || 1000;
-        const modeValue = mode || 'safe';
+        const modeValue = mode || 'risky';
         const betValue = bet || 1;
         const data = calculateGameStrategy(betValue, totalSum, selectedNumber, modeValue);
         setBetData(data.reverse());
