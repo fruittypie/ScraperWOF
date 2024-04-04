@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { setFormData } from '../../state/settings/settingsData';
 import { OuterClick } from 'react-outer-click';
+import '../styles/SettingsCollapse.css';
+
 
 const SettingsCollapse = ({ selectedNumber }) => {
     const [isEditing, setIsEditing] = useState({ bet: false, skipSteps: false });
@@ -9,11 +11,35 @@ const SettingsCollapse = ({ selectedNumber }) => {
     const [mode, setMode] = useState('');
     const [skipSteps, setSkipSteps] = useState('');
     const dispatch = useDispatch();
+    const inputRef = useRef(null);
+
+    const handleFormSubmit = () => {
+        const formData = {
+            bet,
+            mode,
+            skipSteps
+        };
+        const key = `formData_${selectedNumber}`;
+        localStorage.setItem(key, JSON.stringify(formData));
+        dispatch(setFormData(formData));
+        setIsEditing({ bet: false, skipSteps: false });
+    };
 
     const handleModeSelect = (selectedMode) => {
-        console.log('Current mode:', mode); 
         setMode(selectedMode);
     };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          handleFormSubmit();
+        }
+    };
+
+    useEffect(() => {
+        if (isEditing && inputRef.current) {
+          inputRef.current.focus();
+        }
+    }, [isEditing]);
 
     useEffect(() => {
         console.log('Updated mode:', mode);
@@ -33,61 +59,65 @@ const SettingsCollapse = ({ selectedNumber }) => {
         }
     }, [selectedNumber]);
 
-    const handleFormSubmit = () => {
-        const formData = {
-            bet,
-            mode,
-            skipSteps
-        };
-        const key = `formData_${selectedNumber}`;
-        localStorage.setItem(key, JSON.stringify(formData));
-        dispatch(setFormData(formData));
-        setIsEditing({ bet: false, skipSteps: false });
-    };
-
     const handleClickOutside = () => {
         if (isEditing.bet || isEditing.skipSteps) {
             handleFormSubmit();
         }
     };
 
+    const handleInputClick = (inputType) => {
+        if (inputType === 'bet') {
+          setIsEditing({ bet: true, skipSteps: false });
+        } else {
+          setIsEditing({ bet: false, skipSteps: true });
+        }
+    };
+
     return (
         <OuterClick onOuterClick={handleClickOutside}>
-            <div className="row mb-3 justify-content-between">
+            <div className="row mt-1">
                 {/* Bet input */}
-                <div className="col">
+                <div className="col d-flex align-items-center">
                     {isEditing.bet ? (
                         <input
                             type="text"
-                            className="form-control form-control-sm"
+                            className="form-control form-control-sm setting-form"
                             placeholder="Bet"
+                            ref={inputRef}
                             value={bet}
                             onChange={(e) => setBet(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                     ) : (
-                        <p onClick={() => setIsEditing({ ...isEditing, bet: true })} style={{ color: '#C8CCCE' }}>
-                            Step:{bet}
-                        </p>
+                        <h6 onClick={() => handleInputClick('bet')} 
+                            className="m-0"
+                        >
+                            Bet: {bet}
+                        </h6>
                     )}
                 </div>
                 {/* Skip steps input */}
-                <div className="col">
+                <div className="col d-flex align-items-center">
                     {isEditing.skipSteps ? (
                         <input
                             type="text"
-                            className="form-control form-control-sm"
-                            placeholder="Skip Steps"
+                            className="form-control form-control-sm setting-form"
+                            placeholder="Steps"
+                            ref={inputRef}
                             value={skipSteps}
                             onChange={(e) => setSkipSteps(e.target.value)}
+                            onKeyDown={handleKeyDown}
                         />
                     ) : (
-                        <p onClick={() => setIsEditing({ ...isEditing, skipSteps: true })} style={{ color: '#C8CCCE' }}>
-                            {skipSteps}
-                        </p>
+                        <h6 onClick={() => handleInputClick('skipSteps')}
+                            className="m-0"
+                        >
+                            Steps: {skipSteps}
+                        </h6>
                     )}
                 </div>
-                {/* Mode dropdown */}
-                <div className="col">
+                {/* Mode */}
+                <div className="col col-md-8 d-flex justify-content-end">
             <div className="btn-group">
                 <button
                     type="button"
@@ -112,7 +142,7 @@ const SettingsCollapse = ({ selectedNumber }) => {
                      }}
                     onClick={() => handleModeSelect('risky')}
                 >
-                    Risky
+                    Risk
                 </button>
             </div>
         </div>

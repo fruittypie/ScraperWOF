@@ -1,14 +1,9 @@
-:root {
-    --custom-bg-color: #212529; /* Replace with your desired color */
-}
 
-
-
-input.form-control {
+input.form-control.setting-form {
     color: #212529;
     background-color: #C8CCCE;
     border-color: #c9c9c9;
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.3); 
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.35); 
     transition: box-shadow 0.4s ease; 
 }
 
@@ -16,6 +11,6 @@ input.form-control:focus {
     color: #28242c;
     background-color: #C8CCCE;
     outline: none; 
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.6); 
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8); 
     border-color: #c9c9c9;
 }
